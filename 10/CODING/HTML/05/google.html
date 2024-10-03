@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        header {
+            padding: 10px;
+            height: 60px;
+        }
+
+        header nav {
+            float: right;
+        }
+
+        header nav a {
+            margin: 0px 5px;
+            text-decoration: none;
+            color: black;
+        }
+
+        header nav a:hover {
+            margin: 0px 5px;
+            text-decoration: underline;
+            color: black;
+        }
+
+        header nav a.login-btn {
+            display: inline-block;
+            height: 40px;
+            width: 85px;
+            background-color: #0b57d0;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            line-height: 40px;
+        }
+
+        section.content {
+            padding-top: 100px;
+            min-height: calc(100vh - 60px - 92px);
+        }
+
+        section.content h1.google-title {
+            text-align: center;
+            font-size: 96px;
+        }
+
+        section.content form {
+            /* background-color: salmon; */
+            width: 50%;
+            margin: 50px auto;
+        }
+
+        section.content form input[type=text] {
+            width: 100%;
+            height: 45px;
+            border-radius: 22px;
+            padding: 10px 50px;
+            font-size: 30px;
+            outline: none;
+        }
+
+        footer div {
+            height: 46px;
+            background-color: rgb(214, 214, 214);
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#">Gmail</a>
+            <a href="#">Gambar</a>
+            <a href="#">🐈</a>
+            <a href="#" class="login-btn">Login</a>
+        </nav>
+        <div style="clear: right;"></div>
+    </header>
+    <section class="content">
+        <h1 class="google-title">G<span style="color: red;">o</span><span style="color: greenyellow;">o</span>gle</h1>
+        <form action="https://www.google.com/search" method="get">
+            <input type="text" name="q" id="" placeholder="Cari di sini">
+        </form>
+    </section>
+    <footer>
+        <div class="top"></div>
+        <div class="bottom"></div>
+    </footer>
+</body>
+</html>

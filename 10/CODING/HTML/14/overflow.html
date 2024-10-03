@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overflow HTML</title>
+
+    <style>
+    .x-flex-container {
+        display: flex;
+        flex-direction: row;
+        height: 200px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        overflow-x: scroll; /* default scroll */
+        overflow-y: hidden;
+    }
+
+    .x-card {
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: auto;
+        width: 150px;
+        height: 100%;
+        margin-right: 10px;
+        background-color: salmon;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    .y-flex-container {
+        display: flex;
+        flex-direction: column;
+        height: 300px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        padding: 10px;
+        border: 1px solid #ccc;
+        margin-top: 100px;
+    }
+
+    .y-card {
+        flex: 0 0 auto; 
+        min-width: 200px;
+        height: 100px; 
+        margin-bottom: 10px;
+        background-color: yellowgreen;
+        padding: 20px;
+        border: 1px solid #ccc;
+    }
+    </style>
+</head>
+<body>
+    <div class="x-flex-container">
+        <div class="x-card">Card 1</div>
+        <div class="x-card">Card 2</div>
+        <div class="x-card">Card 3</div>
+        <div class="x-card">Card 4</div>
+        <div class="x-card">Card 5</div>
+        <div class="x-card">Card 6</div>
+        <div class="x-card">Card 7</div>
+        <div class="x-card">Card 8</div>
+        <div class="x-card">Card 9</div>
+        <div class="x-card">Card 10</div>
+        <div class="x-card">Card 11</div>
+        <div class="x-card">Card 12</div>
+    </div>
+
+    <div class="y-flex-container">
+        <div class="y-card">Card 1</div>
+        <div class="y-card">Card 2</div>
+        <div class="y-card">Card 3</div>
+        <div class="y-card">Card 4</div>
+        <div class="y-card">Card 5</div>
+        <div class="y-card">Card 6</div>
+    </div>
+</body>
+</html>

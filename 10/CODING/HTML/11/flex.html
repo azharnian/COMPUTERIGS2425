@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Flex</title>
+    <style>
+        .container {
+            display: flex;
+            width: 70%;
+            height: fit-content;
+            padding: 10px;
+            background-color: salmon;
+            margin: 0px auto;
+            gap: 10px;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        div.box {
+            width: 100px;
+            height: 100px;
+            background-color: yellowgreen;
+            font-size: 40px;
+            text-align: center;
+            line-height: 100px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+    </div>
+
+    <script>
+        for (let i = 1; i <= 100; i++)
+        {
+            const box = document.createElement('div');
+            box.classList.add('box');
+            box.innerHTML = i;
+
+            document.querySelector('.container').append(box);
+        }
+    </script>
+    
+</body>
+</html>

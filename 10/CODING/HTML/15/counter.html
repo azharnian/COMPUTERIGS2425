@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let counter;
+
+            if (!localStorage.getItem('number')){
+                localStorage.setItem('number', 0);
+            }
+
+            counter = JSON.parse(localStorage.getItem('number'));
+
+            const h1Text = document.querySelector('h1');
+            const addBtn = document.getElementById('add');
+            const subBtn = document.getElementById('sub');
+            const resetBtn = document.getElementById('reset');
+
+            h1Text.innerHTML = counter;
+
+            addBtn.addEventListener('click', () => {
+                counter++;
+                localStorage.setItem('number', JSON.stringify(counter));
+                h1Text.innerHTML = counter;
+            })
+
+            subBtn.addEventListener('click', () => {
+                counter--;
+                localStorage.setItem('number', JSON.stringify(counter));
+                h1Text.innerHTML = counter;
+            })
+
+            resetBtn.addEventListener('click', () => {
+                counter = 0;
+                localStorage.setItem('number', JSON.stringify(counter));
+                h1Text.innerHTML = counter;
+            })
+
+        })
+    </script>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div.box {
+            width: 600px;
+            height: 300px;
+            /* background-color: salmon; */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            font-size: 48px;
+            background-color: yellowgreen;
+            border-style: none;
+            margin: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1></h1>
+        <div class="buttons">
+            <button id="sub">-</button>
+            <button id="reset">🆘</button>
+            <button id="add">+</button>
+        </div>
+    </div>
+</body>
+</html>

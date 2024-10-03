@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Buttons</title>
+    <style>
+        div#numbersContainer {
+            margin: 0px auto;
+            width: 70%;
+            background-color: salmon;
+            border: 1px solid black;
+            padding: 30px;
+            text-align: center;
+        }
+
+        div#numbersContainer span {
+            display: inline-block;
+            height: 20px;
+            width: 50px;
+            background-color: yellowgreen;
+            text-align: center;
+            line-height: 20px;
+            margin: 5px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <button id="redBtn">Red</button>
+    <button id="greenBtn">Green</button>
+    <button id="blueBtn">Blue</button>
+
+    <div id="myFriendsContainer">
+
+    </div>
+
+    <div id="numbersContainer"></div>
+
+    <script>
+        let myArr = [10, 20, 30, 40, 50];
+        // console.log(myArr[0]);
+        // console.log(myArr[1]);
+        // console.log(myArr[2]);
+        // console.log(myArr[3]);
+        // console.log(myArr[4]);
+        let index = 0;
+        while (index < 5){
+            console.log(myArr[index]);
+            index += 1;
+        }
+
+        let myFriends = ["Andi", "Budi", "Cindy"];
+        index = 0;
+        while (index < 3){
+            console.log(myFriends[index]);
+            const pEl = document.createElement('p');
+            pEl.innerHTML = myFriends[index];
+            document.getElementById('myFriendsContainer').append(pEl);
+            index += 1;
+        }
+
+        let numbers = new Array();
+        // let number = 1;
+        // while (number <= 1000){
+        //     numbers.push(number);
+        //     number++;
+        // }
+        
+        for (let number = 1; number <= 1000; number++)
+        {
+            numbers.push(number);
+        }
+        console.log(numbers);
+
+        // for (let i = 0; i <= numbers.length; i++){
+        //     console.log(numbers[i]);
+        // }
+
+        numbers.forEach( number => { 
+            const spanEl = document.createElement('span');
+            spanEl.innerHTML = number;
+            document.getElementById('numbersContainer').append(spanEl);
+         } );
+
+
+    </script>
+</body>
+</html>

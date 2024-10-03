@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sticky Element Inside Container</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      width: 300px;
+      height: 400px;
+      overflow-y: scroll;
+      border: 1px solid #ccc;
+      margin: 20px auto;
+      padding: 10px;
+    }
+
+    .sticky {
+      position: sticky;
+      top: 0; 
+      background-color: yellow; 
+      padding: 10px;
+      border: 1px solid #999;
+    }
+
+    .sticky.below {
+      position: sticky;
+      bottom: 0; 
+      background-color: yellow; 
+      padding: 10px;
+      border: 1px solid #999;
+    }
+
+    .content p {
+      margin: 10px 0;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime neque illum dolores soluta quam magnam quos non itaque tempora praesentium.</p>
+    </div>
+    <div class="sticky">
+      I am a sticky element
+    </div>
+    <div class="content">
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime neque illum dolores soluta quam magnam quos non itaque tempora praesentium.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime neque illum dolores soluta quam magnam quos non itaque tempora praesentium.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime neque illum dolores soluta quam magnam quos non itaque tempora praesentium.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime neque illum dolores soluta quam magnam quos non itaque tempora praesentium.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime neque illum dolores soluta quam magnam quos non itaque tempora praesentium.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime neque illum dolores soluta quam magnam quos non itaque tempora praesentium.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime neque illum dolores soluta quam magnam quos non itaque tempora praesentium.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime neque illum dolores soluta quam magnam quos non itaque tempora praesentium.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime neque illum dolores soluta quam magnam quos non itaque tempora praesentium.</p>
+    </div>
+    <div class="sticky below">
+      I am a sticky element
+    </div>
+  </div>
+</body>
+</html>

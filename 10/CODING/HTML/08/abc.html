@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABC Formula</title>
+</head>
+<body>
+    
+    <form onsubmit="handleFormSubmit()">
+        <div class="input-group">
+            <label for="aValue">A : </label>
+            <input type="number" name="" id="aValue" required>
+        </div>
+
+        <div class="input-group">
+            <label for="bValue">B : </label>
+            <input type="number" name="" id="bValue" required>
+        </div>
+
+        <div class="input-group">
+            <label for="cValue">C : </label>
+            <input type="number" name="" id="cValue" required>
+        </div>
+
+        <button>Process</button>
+     
+    </form>
+
+    <p id="result"></p>
+    <script>
+        function handleFormSubmit(){
+            event.preventDefault();
+            
+            const a = parseFloat(document.getElementById('aValue').value);
+            const b = parseFloat(document.getElementById('bValue').value);
+            const c = parseFloat(document.getElementById('cValue').value);
+            // console.log(a, b, c);
+
+            const x_one = null;
+            const x_two = null;
+
+            document.getElementById('result').innerHTML = `x1 = ${x_one}, x2 = ${x_two}`;
+        }
+
+        // const a = parseFloat(prompt('Input a value'));
+        // const b = parseFloat(prompt('Input b value'));
+        // const c = parseFloat(prompt('Input c value'));
+
+        // const x_one = null;
+        // const x_two = null;
+
+        // console.log(x_one, x_two);
+    </script>
+</body>
+</html>

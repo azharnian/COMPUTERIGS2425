@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transform</title>
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div.container {
+            display: flex;
+            height: fit-content;
+            width: 80%;
+            justify-content: space-evenly;
+        }
+
+        div.box {
+            width: 200px;
+            height: 250px;
+            background-color: black;
+        }
+
+        .one {
+            background-image: linear-gradient(to bottom left, red, purple);
+        }
+
+        .one:hover {
+            transform: translate(100px, 100px);
+            transition-duration: 2s;
+            transition-timing-function: ease-in-out;
+        }
+
+        .two {
+            background-image: radial-gradient(yellow, green);
+        }
+
+        .two:hover {
+            transform: scale(0.5);
+            transition-duration: 2s;
+        }
+
+        .three {
+            background-image: conic-gradient(red, yellow, green, blue, black);;
+        }
+
+        .three:hover {
+            transform: rotate(90deg);
+            transition-duration: 2s;
+            transform-origin: center center;
+        }
+
+        .four:hover {
+            transform: scale(1.5) rotate(90deg);
+            transition: 5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box one"></div>
+        <div class="box two"></div>
+        <div class="box three"></div>
+        <div class="box four"></div>
+    </div>
+</body>
+</html>

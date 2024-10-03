@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Buttons</title>
+</head>
+<body>
+    <button data-color="red">🤡</button>
+    <button data-color="green">☘️</button>
+    <button data-color="blue">🐠</button>
+
+    <script>
+        const myButtons = document.querySelectorAll('button');
+        
+        myButtons.forEach( button => {
+            button.addEventListener('click', function(){
+                document.body.style.backgroundColor = this.dataset.color;
+            })
+        })
+    </script>
+</body>
+</html>
