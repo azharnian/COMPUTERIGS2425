@@ -1,4 +1,8 @@
+import { useContext } from "react";
+import { GlobalContext } from "../context";
+
 export default function Article(props){
+    const user = useContext(GlobalContext);
 
     const articleStyle = {
         textAlign : 'left',
@@ -14,7 +18,7 @@ export default function Article(props){
                 Date : {props.date}, tags: {props.tags.join(", ")}{" "}
             </small>
             <div>
-                <small>Ditulis oleh</small>
+                <small>Ditulis oleh {user.username}</small>
             </div>
         </div>
     )

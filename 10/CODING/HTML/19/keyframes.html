@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyframes</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        @keyframes first_animation {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(200px);
+            }
+        }
+
+        @keyframes second_animation {
+            from {
+                top: 0px;
+                left: 0px;
+                background-color: white;
+            }
+            to {
+                top: 0px;
+                left: 200px;
+                background-color: red;
+            }
+        }
+
+        @keyframes third_animation {
+            0% {
+                top: 0px;
+                left: 0px;
+                background-color: red;
+            }
+            25% {
+                top: 0px;
+                left: calc(100% - 100px);
+                background-color: purple;
+            }
+            50% {
+                top: calc(100% - 100px);
+                left: calc(100% - 100px);
+                background-color: blue;
+            }
+            75% {
+                top: calc(100% - 100px);
+                left: 0px;
+                background-color: pink;
+            }
+            100% {
+                top: 0px;
+                left: 0px;
+                background-color: orange;
+            }
+        }
+
+        div.box {
+            position: relative;
+            height: 100px;
+            width: 100px;
+            background-color: yellowgreen;
+        }
+
+        div.box.one {
+            animation-name: first_animation;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+        }
+
+        div.box.two {
+            /* animation-name: second_animation;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate; */
+            animation: second_animation 2s infinite alternate;
+        }
+
+        div.container {
+            position: relative;
+            width: 500px;
+            height: 300px;
+            background-color: salmon;
+            margin: 0px auto;
+        }
+
+        div.box.three {
+            position: absolute;
+            animation-name: third_animation;
+            animation-duration: 5s;
+            animation-iteration-count: infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="box one"></div>
+    <div class="box two"></div>
+
+    <div class="container">
+        <div class="box three"></div>
+    </div>
+</body>
+</html>

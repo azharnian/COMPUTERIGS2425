@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide / Carousel</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .slideshow-container {
+            max-width: 1000px;
+            position: relative;
+            margin: 0px auto;
+        }
+
+        .mySlides {
+            display: none;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            /* background-color: salmon; */
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 36px;
+        }
+
+        .next {
+            right: 0;
+        }
+
+        .text {
+            position: absolute;
+            color: white;
+            /* background-color: #ccc; */
+            font-size: 24px;
+            padding: 8px 0px;
+            bottom: 34px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .numbertext {
+            position: absolute;
+            top: 0;
+            color: #f2f2f2;
+            font-size: 28px;
+            padding: 8px 12px;
+        }
+
+        .dot-container {
+            position: absolute;
+            width: 100%;
+            bottom: 10px;
+            /* background-color: #ccc; */
+            text-align: center;
+        }
+
+        .dot {
+            display: inline-block;
+            cursor: pointer;
+            height: 18px;
+            width: 18px;
+            margin: 0 2px;
+            background-color: white;
+            border-radius: 50%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="slideshow-container">
+
+        <div class="mySlides fade">
+          <div class="numbertext">1 / 3</div>
+          <img src="https://picsum.photos/id/237/300/200" style="width:100%">
+          <div class="text">Caption Text</div>
+        </div>
+      
+        <div class="mySlides fade">
+          <div class="numbertext">2 / 3</div>
+          <img src="https://picsum.photos/id/238/300/200" style="width:100%">
+          <div class="text">Caption Two</div>
+        </div>
+      
+        <div class="mySlides fade">
+          <div class="numbertext">3 / 3</div>
+          <img src="https://picsum.photos/id/239/300/200" style="width:100%">
+          <div class="text">Caption Three</div>
+        </div>
+      
+        <a class="prev">&#10094;</a>
+        <a class="next">&#10095;</a>
+
+        <div class="dot-container">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+        
+    </div>
+
+    
+
+    <script>
+        let slideIndex = 1;
+        let slides = document.querySelectorAll(".mySlides");
+
+        function nextSlides() {
+            if (slideIndex < slides.length) {
+                slideIndex++;
+                // console.log(slideIndex);
+                showSlides(slideIndex);
+            }  
+        }
+
+        function prevSlides() {
+            if (slideIndex > 1){
+                slideIndex--;
+                // console.log(slideIndex);
+                showSlides(slideIndex);
+            }
+        }
+
+        document.querySelector('.next').addEventListener('click', nextSlides);
+        document.querySelector('.prev').addEventListener('click', prevSlides);
+
+        function showSlides(n) {  
+            // slides[n-1].style.display = "block";
+            slides.forEach( (slide, index) => {
+                if (index === (n-1)){
+                    slide.style.display = 'block';
+                } else {
+                    slide.style.display = 'none';
+                }
+            })
+        }
+        
+        showSlides(slideIndex); 
+    </script>
+</body>
+</html>
