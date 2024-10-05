@@ -22,7 +22,7 @@
         .prev, .next {
             cursor: pointer;
             position: absolute;
-            top: 50%;
+            top: 48%;
             /* background-color: salmon; */
             padding: 16px;
             color: white;
@@ -114,15 +114,19 @@
         function nextSlides() {
             if (slideIndex < slides.length) {
                 slideIndex++;
-                // console.log(slideIndex);
                 showSlides(slideIndex);
-            }  
+            }  else{
+                slideIndex = 1;
+                showSlides(slideIndex);
+            }
         }
 
         function prevSlides() {
             if (slideIndex > 1){
                 slideIndex--;
-                // console.log(slideIndex);
+                showSlides(slideIndex);
+            } else {
+                slideIndex = slides.length;
                 showSlides(slideIndex);
             }
         }
