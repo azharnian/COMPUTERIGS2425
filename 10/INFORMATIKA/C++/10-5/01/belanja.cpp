@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 int main()
 {
@@ -14,14 +14,17 @@ int main()
 	
 	cout << "======ALMART======" << endl;
 	cout << endl;
-	cout << "Indomie Goreng " << indomie_goreng << endl;
-	cout << "Sari Roti " << sari_roti << endl;
-	cout << "Aqua " << aqua << endl;
-	cout << "Silver Queen " << silver_queen << endl;
-	cout << "Beras 5Kg " << beras_5kg << endl;
-	cout << "Minyak Sunco 2L " << minyak_sunco_2L << endl;
-	cout << "Chiki "	<< chiki << endl;
+	cout << "Indomie Goreng \t" << indomie_goreng << endl;
+	cout << "Sari Roti \t" << sari_roti << endl;
+	cout << "Aqua \t\t" << aqua << endl;
+	cout << "Silver Queen \t" << silver_queen << endl;
+	cout << "Beras 5Kg \t" << beras_5kg << endl;
+	cout << "Minyak Sunco 2L" << minyak_sunco_2L << endl;
+	cout << "Chiki \t\t"	<< chiki << endl;
 	cout << endl;
-	cout << "Total Belanja : " << total << endl;
-	
+	cout << "Total Belanja :" << total << endl;
+
+	int uang_dibayarkan = 200000;
+	int kembalian = uang_dibayarkan - total;
+	cout << "Kembalian : \t" << kembalian << endl;
 }

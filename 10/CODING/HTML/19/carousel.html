@@ -71,6 +71,20 @@
             border-radius: 50%;
         }
 
+        .active, .dot:hover {
+            background-color: #717171;
+        }
+
+        .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes fade {
+            from {opacity: .4}
+            to {opacity: 1}
+        }
+
     </style>
 </head>
 <body>
@@ -98,9 +112,9 @@
         <a class="next">&#10095;</a>
 
         <div class="dot-container">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+            <span class="dot" data-slide="1"></span>
+            <span class="dot" data-slide="2"></span>
+            <span class="dot" data-slide="3"></span>
         </div>
         
     </div>
@@ -110,6 +124,22 @@
     <script>
         let slideIndex = 1;
         let slides = document.querySelectorAll(".mySlides");
+        let dots = document.querySelectorAll(".dot");
+
+        function inactivateAllDots(){
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+            })
+        }
+
+        dots.forEach(function(dot){
+            dot.addEventListener('click', function(){
+                // console.log(this.dataset.slide);
+                showSlides(this.dataset.slide);
+                inactivateAllDots();
+                this.classList.add('active');
+            })
+        })
 
         function nextSlides() {
             if (slideIndex < slides.length) {
@@ -143,9 +173,16 @@
                     slide.style.display = 'none';
                 }
             })
+            inactivateAllDots();
+            dots[n-1].classList.add('active'); 
         }
         
-        showSlides(slideIndex); 
+        showSlides(slideIndex);
+
+        setInterval(()=>{
+            nextSlides()
+        }, 2000);
+        
     </script>
 </body>
 </html>
