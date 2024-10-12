@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>NASA</title>
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+        }
+        header {
+            background-color: salmon;
+            padding: 5px 15px;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: aqua;
+        }
+
+        div.left,
+        div.right {
+            display: flex;
+        }
+
+        div.logo > img {
+            max-width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="left">
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        Explore
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                </div>
+                <form action="">
+                    <input type="text" name="" id="">
+                </form>
+            </div>
+            <div class="logo">
+                <img src="https://www.nasa.gov/wp-content/themes/nasa/assets/images/nasa-logo.svg" alt="logo nasa">
+            </div>
+            <div class="right">
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        News & Events
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        Multimedia
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                </div>
+                <a href="">NASA+ <span>LIVE</span></a>
+            </div>
+        </nav>
+    </header>
+</body>
+</html>
