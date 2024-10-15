@@ -3,9 +3,14 @@ import sys
 from random import choice
 
 from conf import Conf
+from statistic import Statistic
 from sprites.platform import Platform
 from sprites.bird import Bird
 from sprites.pipe import Pipe
+
+from sprites.basics.label import Label
+from sprites.basics.button import PlayButton, Button
+from sprites.basics.entry import Entry
 
 class Game:
 
@@ -14,6 +19,11 @@ class Game:
     screen_rect = screen.get_rect()
 
     def __init__(self):
+        self.game_title_label = Label(self, "Flappy Bird")
+        self.player_entry = Entry(self, "")
+        self.login_button = Button(self, "LOGIN")
+        # self.play_button = PlayButton(self)
+        self.play_button = Button(self, "PLAY NOW")
         self.platform = Platform(self)
         self.bird = Bird(self)
         self.pipes = [ Pipe(self, position) for position in ["top", "bottom"] ]
@@ -22,6 +32,18 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.bird.fly = True
+
+            elif event.type == pygame.KEYUP:	
+                if event.key == pygame.K_SPACE:
+                    self.bird.fly = False
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                print(mouse_pos)
 
     def set_fps(self):
         pygame.time.Clock().tick(Conf.FPS)
@@ -42,25 +64,41 @@ class Game:
         self.pipes[1].rect.bottomleft = self.screen_rect.bottomright
         self.pipes[0].rect.topleft = self.screen_rect.topright
 
+    def game_intro(self):
+        self.game_title_label.show()
+        self.player_entry.show()
+        self.login_button.show()
+
+    def game_play(self):
+        self.game_title_label.show()
+        self.bird.show()
+        for pipe in self.pipes:              
+            pipe.show()
+        self.platform.show()
+        self.play_button.show()
+
+
+        if Statistic.game_active:
+            self.bird.move()
+            for pipe in self.pipes:
+                if pipe.rect.right <= 0:
+                    self.reset_pipes()               
+                pipe.move()
+            self.platform.move()
+
+
     def loop(self):
         while True:
             self.screen.fill(Conf.SCREEN_BG_COLOR)  
 
-            self.bird.show()
-            self.bird.move()
-
-            for pipe in self.pipes:
-                if pipe.rect.right <= 0:
-                    self.reset_pipes()               
-                pipe.show()
-                pipe.move()
-
-            self.platform.show()  
-            self.platform.move()
-        
+            if Statistic.intro:
+                self.game_intro()
+            else:
+                self.game_play()
+            
             self.set_fps()
             self.check_event()
 
-game = Game()
 if __name__ == "__main__":
+    game = Game()
     game.loop()
