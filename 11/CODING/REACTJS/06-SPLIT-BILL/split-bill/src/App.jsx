@@ -1,6 +1,7 @@
 import { useState } from "react";
 import friendsList from "./friends.json"
 
+import FormSplitBill from "./components/FormSplitBill";
 import FriendListCard from "./components/FriendListCard";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
           friends={friends}
         />
       </div>
+      <FormSplitBill />
     </div>
     </>
   )
