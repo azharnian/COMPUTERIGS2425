@@ -20,14 +20,6 @@
 
         nav {
             display: none;
-            position: fixed;
-            bottom: 0px;
-            left: 0px;
-            height: 100px;
-            width: 100%;
-            background-color: greenyellow;
-            justify-content: space-evenly;
-            align-items: center;
         }
 
         nav a {
@@ -105,7 +97,15 @@
             }
 
             nav {
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
                 display: flex;
+                justify-content: space-evenly;
+                align-items: center;
+                height: 100px;
+                width: 100%;
+                background-color: greenyellow;
             }
 
         }
@@ -113,7 +113,7 @@
 </head>
 <body>
     <div class="container">
-        <nav class="mobile">
+        <nav>
             <a href="#home">🏠</a>
             <a href="#">❤️</a>
             <a href="#">☎️</a>
