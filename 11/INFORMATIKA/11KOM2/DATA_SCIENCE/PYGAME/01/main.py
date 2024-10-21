@@ -7,6 +7,7 @@ from sprites.platform import Platform
 from sprites.pipe import Pipe
 
 from sprites.basic.label import Label
+from sprites.basic.button import PlayButton, Button
 
 class Game:
 
@@ -16,6 +17,7 @@ class Game:
 
     def __init__(self):
         self.game_title_label = Label(self, "Flappy Bird")
+        self.play_button = Button(self, "PLAY NOW")
         self.bird = Bird(self)
         self.platform = Platform(self)
         self.pipes = [ Pipe(self, position) for position in ["top", "bottom"] ]
@@ -41,6 +43,7 @@ class Game:
         while True:
             self.screen.fill(Conf.SCREEN_BG_COLOR)
             self.game_title_label.show() 
+            self.play_button.show()
 
             self.bird.show()
             self.bird.move() 
