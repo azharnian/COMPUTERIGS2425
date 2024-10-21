@@ -12,3 +12,11 @@ class Conf():
 
     PIPE_COLOR = (0, 200, 0)
     PIPE_SPEED = 5
+
+    FONT_FAMILY = "CollegeGames.ttf"
+    FONT_SIZE = 80
+    FONT_COLOR = (242, 255, 0)
+
+    BUTTON_FONT_SIZE = int(0.5*FONT_SIZE)
+    BUTTON_WIDTH = 90
+    BUTTON_HEIGHT = 50
