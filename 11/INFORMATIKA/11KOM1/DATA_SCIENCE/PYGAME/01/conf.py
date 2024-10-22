@@ -8,7 +8,7 @@ class Conf():
     SCREEN_BG_COLOR = (107, 52, 235)
     PLATFORM_SPEED = 5
     BIRD_FLY_SPEED = 3
-    GRAVITY = 1
+    GRAVITY = 10
 
     PIPE_COLOR = (0, 200, 0)
     PIPE_SPEED = 5
@@ -21,4 +21,9 @@ class Conf():
     BUTTON_WIDTH = 90
     BUTTON_HEIGHT = 50
 
-    ENTRY_COLOR_INACTIVE = (0, 0, 200)
+    ENTRY_HEIGHT = 50
+    ENTRY_COLOR_ACTIVE = (255, 0, 0)
+    ENTRY_COLOR_INACTIVE = (122, 255, 0)
+    ENTRY_FONT = "CollegeGames.ttf"
+    ENTRY_FONT_SIZE = 30
+    ENTRY_FONT_COLOR = (255, 255, 255)

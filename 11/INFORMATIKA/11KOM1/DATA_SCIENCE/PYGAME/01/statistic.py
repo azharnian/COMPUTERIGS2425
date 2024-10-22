@@ -1,9 +1,11 @@
 class Statistic:
 
-    intro = True
+    intro = False
     game_active = False
+    play_again = True
+
     high_score = 0
-    current_score = 0
+    score = 0
     level = 1
     life = 3
 
