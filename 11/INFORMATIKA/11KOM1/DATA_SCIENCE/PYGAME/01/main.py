@@ -68,7 +68,6 @@ class Game:
                 elif not Statistic.game_active:
                     self.check_onclick_play_button(mouse_pos)
                 
-
     def check_onclick_login_button(self, mouse_pos):
         if self.login_button.rect.collidepoint(mouse_pos):
             Statistic.intro = False
@@ -78,13 +77,11 @@ class Game:
             Statistic.game_active = True
     
     def check_onclick_exit_button(self, mouse_pos):
-        print(mouse_pos)
         if self.exit_button.rect.collidepoint(mouse_pos):
             sys.exit()
 
     def check_onclick_play_again_button(self, mouse_pos):
         if self.play_again_button.rect.collidepoint(mouse_pos):
-            print("play again")
             Statistic.life -= 1
             self.reset_pipes()
             self.bird.rect.center = self.screen_rect.center
