@@ -8,17 +8,39 @@
 <body>
     <script>
         let cat = {
-             name : "bobby",
-             age : 10,
-             legs : 3,
-             type : "mujair",
-             owner : "prabowo",
-             sleep : function (){
-                console.log("zz..zz.z.z.");
-             },
-             eat : () => {
-                console.log("nom... nom...");
-             }
+            x : 0,
+            y : 0,
+            isShowed : true,
+            height : '50px',
+            width : '50px',
+            name : "bobby",
+            age : 10,
+            legs : 3,
+            type : "mujair",
+            owner : "prabowo",
+            skin : {
+                normal : "assets/cat.webp",
+                sleep : "assets/cat_sleep.jpeg",
+                eat : "assets/cat_eat.jpeg",
+            },
+            element : document.createElement('img'),
+            show : function() {
+                this.element.style.display = "block";
+                this.element.style.position = "relative";
+                this.element.src = this.skin.normal;
+                this.element.style.width = this.width;
+                this.element.style.height = this.height;
+                document.querySelector('body').append(this.element);
+            },
+            hide : function(){
+
+            },
+            sleep : function (){
+            console.log("zz..zz.z.z.");
+            },
+            eat : () => {
+            console.log("nom... nom...");
+            }
         }
         // console.log(cat.name);
         // cat.sleep();
@@ -27,6 +49,7 @@
         let box = {
             x : 0,
             y : 0,
+            isShowed : true,
             height : '50px',
             width : '50px',
             color : 'red',
@@ -45,14 +68,41 @@
             moveRight : function(step = 10) {
                 this.x += step;
                 this.element.style.left = `${this.x}px`;
+            },
+            moveLeft : function(step = 10) {
+                this.x -= step;
+                this.element.style.left = `${this.x}px`;
+            },
+            moveDown : function(step = 10){
+                this.y += step;
+                this.element.style.top = `${this.y}px`;
+            },
+            moveUp : function(step = 10){
+                this.y -= step;
+                this.element.style.top = `${this.y}px`;
             }
         }
 
-        box.show();
+        // box.show();
+        cat.show();
         document.addEventListener('keydown', e => {
             // console.log(e);
             if (e.key === 'd')
                 box.moveRight();
+            else if (e.key === 'a')
+                box.moveLeft();
+            else if (e.key === 's')
+                box.moveDown();
+            else if (e.key === 'w')
+                box.moveUp();
+            else if (e.key === 'h')
+                if (box.isShowed) {
+                    box.isShowed  = false;
+                    box.hide();
+                } else {
+                    box.isShowed  = true;
+                    box.show();
+                }
         })
     </script>
 </body>
