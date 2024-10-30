@@ -8,11 +8,11 @@ export const box = {
     element : document.createElement('div'),
     show : function() {
         this.element.style.display = 'block';
-        this.element.style.position = 'relative';
+        this.element.style.position = 'absolute';
         this.element.style.height = this.height;
         this.element.style.width = this.width;
         this.element.style.backgroundColor = this.color;
-        document.querySelector('body').append(this.element);
+        document.querySelector('.arena').append(this.element);
     },
     hide : function() {
         this.element.style.display = 'none';

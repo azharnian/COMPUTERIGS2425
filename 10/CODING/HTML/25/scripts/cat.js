@@ -16,14 +16,14 @@ export const cat = {
     },
     element : document.createElement('img'),
     show : function() {
+        this.element.classList.add("cat");
         this.element.style.display = "block";
-        this.element.style.position = "relative";
         this.element.src = this.skin.normal;
         this.element.style.width = this.width;
         this.element.style.height = this.height;
         this.element.style.left = `${this.x}px`;
         this.element.style.top = `${this.y}px`;
-        document.querySelector('body').append(this.element);
+        document.querySelector('.arena').append(this.element);
     },
     hide : function(){
         this.element.style.display = "none";

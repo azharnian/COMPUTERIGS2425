@@ -4,13 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Object</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div.arena {
+            margin: 0 auto;
+        }
+
+        img.cat {
+            position: absolute;
+        }
+    </style>
 </head>
 <body>
-    <script type="module">  
+    <script type="module"> 
+        import { arena } from './scripts/arena.js'; 
         import { cat } from './scripts/cat.js';
         import { box } from './scripts/box.js';
         import { checkKeydownEvent } from './scripts/keyEvent.js';
-    
+        
+        arena.show();
         cat.show();
         box.show();
         
