@@ -114,6 +114,9 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   }
 
   const isWatched = watched.some((movie) => movie.imdbID === selectedId);
+  const userRatingWatched = watched.find(
+    (movie) => movie.imdbID === selectedId
+  )?.userRating;
 
   const {
     Title: title,
