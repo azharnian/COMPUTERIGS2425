@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div.arena {
+            margin: 0 auto;
+        }
+
+        img.cat {
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <script type="module"> 
+        import { arena } from './scripts/arena.js'; 
+        import { cat } from './scripts/cat.js';
+        import { box } from './scripts/box.js';
+        import { Star } from './scripts/star.js';
+
+        import { checkKeydownEvent } from './scripts/keyEvent.js';
+        
+        const star1 = new Star();
+        const star2 = new Star('yellow');
+
+        arena.show();
+        cat.show();
+        // box.show();
+        star1.show();
+        star2.show();
+        
+        checkKeydownEvent();
+    </script>
+</body>
+</html>
