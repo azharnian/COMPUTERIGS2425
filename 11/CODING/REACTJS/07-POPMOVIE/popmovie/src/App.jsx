@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { OMDB_API_KEY } from "./config";
+import StarRatings from "./components/StarRatings";
 
 function Logo() {
   return (
@@ -93,9 +94,26 @@ function Loader() {
   );
 }
 
-function MovieDetails({ selectedId, onCloseMovie }) {
+function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState(0);
+
+  function handleAddWatched() {
+    const newWatchedMovie = {
+      imdbID: selectedId,
+      title,
+      year,
+      poster,
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime.split(" ").at(0)),
+      userRating: Number(userRating),
+    };
+    onAddWatched(newWatchedMovie);
+    onCloseMovie();
+  }
+
+  const isWatched = watched.some((movie) => movie.imdbID === selectedId);
 
   const {
     Title: title,
@@ -109,7 +127,6 @@ function MovieDetails({ selectedId, onCloseMovie }) {
     Actors: actors,
     Director: director,
   } = movie;
-
 
   useEffect(() => {
     async function getMovieDetails() {
@@ -160,6 +177,29 @@ function MovieDetails({ selectedId, onCloseMovie }) {
             <p>Genre: {genre}</p>
             <p>Starring: {actors}</p>
             <p>Directed by: {director}</p>
+
+            <div className="rating">
+              {!isWatched ? (
+                <>
+                  <StarRatings
+                    max={10}
+                    size={24}
+                    color="#fcc419"
+                    onSetRating={setUserRating}
+                  />
+                  {userRating > 0 && (
+                    <button className="btn-add" onClick={handleAddWatched}>
+                      + Add to Watched
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p>
+                  you have watched this movie with a rating of{" "}
+                  {userRatingWatched} / 10
+                </p>
+              )}
+            </div>
           </section>
         </>
       )}
@@ -172,6 +212,12 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [watched, setWatched] = useState([]);
+
+  function handleAddWatched(movie) {
+    setWatched((watched) => [...watched, movie]);
+  }
 
   function handleSelectMovieId(id) {
     setSelectedMovieId((selectedId) => (selectedId === id ? null : id));
@@ -225,6 +271,8 @@ function App() {
               <MovieDetails
                 selectedId={selectedMovieId}
                 onCloseMovie={handleCloseMovie}
+                onAddWatched={handleAddWatched}
+                watched={watched}
               />
             )
           }
