@@ -27,17 +27,23 @@
         import { cat } from './scripts/cat.js';
         import { box } from './scripts/box.js';
         import { Star } from './scripts/star.js';
+        import { Car } from "./scripts/car.js";
 
         import { checkKeydownEvent } from './scripts/keyEvent.js';
         
         const star1 = new Star();
         const star2 = new Star('yellow');
+        const myCar = new Car("Toyota", "Agya", 2024);
+        const yourCar = new Car("Tesla", "CyberTruck", 2025, "silver", "assets/cybertruck.jpeg");
 
         arena.show();
         cat.show();
         // box.show();
         star1.show();
         star2.show();
+        myCar.show();
+        yourCar.show();
+        yourCar.moveDown(200);
         
         checkKeydownEvent();
     </script>
