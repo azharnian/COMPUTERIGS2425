@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Pokemon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        #pokemonData {
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="./assets/loading.css">
+</head>
+<body>
+    <h1>Pokémon Info</h1>
+    <form id="pokemonForm">
+      <label for="pokemonName">Enter Pokémon Name:</label>
+      <input type="text" id="pokemonName" name="pokemonName" required>
+      <button type="submit">Get Info</button>
+    </form>
+  
+    <div id="pokemonData"></div>
+    <script>
+        function renderPokemonData(data) {
+            const pokemonDataDiv = document.getElementById('pokemonData');
+            pokemonDataDiv.innerHTML = `
+                <h2>${data.name}</h2>
+                <p>ID: ${data.id}</p>
+                <p>Height: ${data.height}</p>
+                <p>Weight: ${data.weight}</p>
+                <p>Base experience: ${data.base_experience}</p>
+                <p>Types: ${data.types.map(typeInfo => typeInfo.type.name).join(', ')}</p>
+                <p>Abilities: ${data.abilities.map(abilityInfo => abilityInfo.ability.name).join(', ')}</p>
+                `;
+        }
+
+        function showError(msg){
+            const pokemonDataDiv = document.getElementById('pokemonData');
+            pokemonDataDiv.innerHTML = `${msg}`;
+        }
+
+        function showLoading(){
+            const pokemonDataDiv = document.getElementById('pokemonData');
+            pokemonDataDiv.innerHTML = `
+            <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            `;
+        }
+
+        async function getPokemonData(pokemonName) {
+            const url = `https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`;
+            
+            showLoading();
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const data = await response.json();
+                // console.log(data);
+                setTimeout(() => {
+                    renderPokemonData(data); 
+                }, 2000);         
+            } catch (error) {
+                // console.log(error);
+                showError(error);
+            }
+        }
+  
+        document.getElementById('pokemonForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const pokemonName = document.getElementById('pokemonName').value.trim();
+            if (pokemonName) {
+                // console.log(pokemonName);
+                getPokemonData(pokemonName);
+            }
+        });
+    </script>
+</body>
+</html>

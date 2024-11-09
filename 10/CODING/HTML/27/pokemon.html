@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Pokemon</title>
+</head>
+<body>
+    <h1></h1>
+    <img src="" alt="">
+
+    <script>
+        const title = document.querySelector("h1");
+        const img = document.querySelector("img");
+        /*
+        fetch("./data.json")
+            .then(response => response.json())
+            .then(result => {
+                const pikachu = result;
+                title.innerHTML = pikachu.name;
+                img.src = pikachu.front_default;
+            })
+            .catch(error => console.log(error));
+        */
+
+        fetch("https://pokeapi.co/api/v2/pokemon/pikachu")
+            .then(response => response.json())
+            .then(result => {
+                const pikachu = result;
+                // console.log(pikachu.name);
+                title.innerHTML = pikachu.name;
+                // console.log(pikachu.sprites.front_default);
+                img.src = pikachu.sprites.front_default;
+            })
+            .catch(error => {
+                console.log(error);
+                title.innerHTML = "Failed to Load";
+
+            });
+        
+        
+    </script>
+</body>
+</html>

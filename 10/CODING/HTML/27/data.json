@@ -1,0 +1,5 @@
+{
+    "name" : "pikachu",
+    "front_default" : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+    "local_img" : "./assets/image.jpeg"
+}

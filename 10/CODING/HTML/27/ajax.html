@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Pokemon</title>
+</head>
+<body>
+    <h1></h1>
+    <img src="" alt="">
+
+    <script>
+        const title = document.querySelector("h1");
+        const img = document.querySelector("img");
+
+        const ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                // console.log(ajax.responseText);
+                const pikachu = JSON.parse(ajax.responseText);
+                title.innerHTML = pikachu.name;
+                img.src = pikachu.front_default;
+
+            }
+        };
+        ajax.open("GET", "./data.json", true);
+        ajax.send();
+
+    </script>
+</body>
+</html>
