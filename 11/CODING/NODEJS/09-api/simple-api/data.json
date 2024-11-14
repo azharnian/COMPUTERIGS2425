@@ -1,0 +1,63 @@
+[
+    {
+      "title": "Where the Crawdads Sing",
+      "author": "Delia Owens",
+      "pages": 384,
+      "rating": 4.5,
+      "reviews": [
+        {
+          "reviewer": "Cathy",
+          "comment": "Beautifully written and touching."
+        },
+        { "reviewer": "Dan", "comment": "A must-read." }
+      ],
+      "genres": [ "Fiction", "Mystery" ]
+    },
+    {
+      "title": "Educated",
+      "author": "Tara Westover",
+      "pages": 352,
+      "rating": 4.7,
+      "reviews": [
+        { "reviewer": "Eva", "comment": "Inspiring and eye-opening." },
+        { "reviewer": "Frank", "comment": "A story of resilience." }
+      ],
+      "genres": [ "Memoir", "Non-fiction" ]
+    },
+    {
+      "title": "Becoming",
+      "author": "Michelle Obama",
+      "pages": 448,
+      "rating": 4.8,
+      "reviews": [
+        { "reviewer": "Grace", "comment": "Powerful and insightful." },
+        { "reviewer": "Henry", "comment": "An inspiring journey." }
+      ],
+      "genres": [ "Biography", "Autobiography" ]
+    },
+    {
+      "title": "The Alchemist",
+      "author": "Paulo Coelho",
+      "pages": 208,
+      "rating": 4.3,
+      "reviews": [
+        { "reviewer": "Quinn", "comment": "Inspirational and uplifting." },
+        { "reviewer": "Rachel", "comment": "A timeless tale." }
+      ],
+      "genres": [ "Fiction", "Fantasy" ]
+    },
+    {
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "pages": 324,
+      "rating": 4.8,
+      "reviews": [
+        { "reviewer": "Sam", "comment": "A profound impact." },
+        {
+          "reviewer": "Tina",
+          "comment": "A masterpiece of American literature."
+        }
+      ],
+      "genres": [ "Fiction", "Classic" ]
+    }
+  ]

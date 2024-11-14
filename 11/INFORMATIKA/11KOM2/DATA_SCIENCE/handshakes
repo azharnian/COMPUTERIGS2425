@@ -1,0 +1,13 @@
+graph Handshakes {
+	Eric
+	Fred
+	Bob
+	Dan
+	Cody
+	Alice
+	Fred -- Bob
+	Fred -- Eric
+	Bob -- Cody
+	Alice -- Fred
+	Alice -- Eric
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    
+    <script id="pokeCard" type="text/x-handlebars-template">
+        {{#each pokemons}}
+        <div class="card">
+            <div class="left" style="background-image: url('{{imageUrl}}');"></div>
+            <div class="right">
+                <h1 class="poke-name">{{name}}</h1>
+                <a class="poke-api" href="{{url}}" target="_blank">🪪 API URL</a>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <style>
+        div.card > div.left {
+            width: 150px;
+            height: 100px;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+        }
+    </style>
+
+    <title>Pokedex API</title>
+</head>
+<body>
+   <main>
+        <article id="content"></article>
+   </main>
+   <script>
+    const pokemonTemplate = Handlebars.compile(document.getElementById("pokeCard").innerHTML); 
+
+    let offset = 0;
+    const limit = 20;
+
+    async function fetchPokemon() {
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
+        const data = await response.json();
+        offset += limit;
+        pokemonsArr = [];
+        data.results.forEach(element => {
+            const url = element.url
+            const segments = url.split('/');
+            const id = segments[segments.length - 2];
+            pokemonsArr.push(
+                {
+                    id : id,
+                    name : element.name,
+                    url : element.url,
+                    imageUrl : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+                }
+            )
+        });
+        return { pokemons : pokemonsArr };
+    }
+
+    function renderPokemon(pokemonList) {
+        const container = document.getElementById('content');
+        const html = pokemonTemplate(pokemonList);
+        container.insertAdjacentHTML('beforeend', html);
+    }
+
+    async function initialLoad() {
+        const pokemonList = await fetchPokemon();
+        renderPokemon(pokemonList);
+    }
+
+    initialLoad();
+   </script>
+</body>
+</html>

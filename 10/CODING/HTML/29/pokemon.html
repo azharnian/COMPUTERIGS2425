@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon</title>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+
+    <script id="person-template" type="text/x-handlebars-template">
+        <div class="person">
+            <h2>{{name}}</h2>
+            <p>Age: {{age}}</p>
+            <ul>
+            {{#each hobbies}}
+                <li>{{this}}</li>
+            {{/each}}
+            </ul>
+        </div>
+    </script>
+
+    <script id="pokemon-card-template" type="text/x-handlebars-template">
+        <div class="card">
+            <h1 id="title">{{title}}</h1>
+            <p class="text">{{text}}</p>
+            <img width="100px" id="image" src="{{imgUrl}}" alt="">
+        </div>
+    </script>
+      
+</head>
+<body>
+    <div id="content"></div>
+
+    <script>
+        const source = document.getElementById('person-template').innerHTML;
+        const template = Handlebars.compile(source);
+
+        const person = {
+            name: "John Doe",
+            age: 30,
+            hobbies: ["Reading", "Traveling", "Swimming"]
+        };
+        
+        const element = template(person);
+        document.getElementById('content').innerHTML = element;
+
+        const pokemon = {
+            title : "The Best",
+            text : "Lorem ipsum",
+            imgUrl : "https://cdn.pixabay.com/photo/2021/12/26/17/31/pokemon-6895600_1280.png"
+        };
+
+        const pokemonSource = document.getElementById('pokemon-card-template').innerHTML;
+        const pokemonTemplate = Handlebars.compile(pokemonSource);
+        const elPokemonCard = pokemonTemplate(pokemon);
+        document.getElementById('content').innerHTML = elPokemonCard;
+
+    </script>
+</body>
+</html>
