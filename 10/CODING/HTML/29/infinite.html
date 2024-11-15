@@ -32,6 +32,7 @@
 <body>
    <main>
         <article id="content"></article>
+        <button>load more</button>
    </main>
    <script>
     const pokemonTemplate = Handlebars.compile(document.getElementById("pokeCard").innerHTML); 
@@ -72,6 +73,21 @@
     }
 
     initialLoad();
+
+    document.querySelector('button').addEventListener('click', async () => {
+        // console.log("load more!");
+        const pokemonList = await fetchPokemon();
+        renderPokemon(pokemonList);
+
+    })
+
+    window.addEventListener('scroll', async () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            // console.log("bottom!");
+            const pokemonList = await fetchPokemon();
+            renderPokemon(pokemonList);
+        }
+    });
    </script>
 </body>
 </html>
