@@ -1,0 +1,13 @@
+h1 {
+    color: white;
+    font-size: 24px;
+    text-align: center;
+}
+
+h1.first {
+    background-color: red;
+}
+
+h1.second {
+    background-color: purple;
+}

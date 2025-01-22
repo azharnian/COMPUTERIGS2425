@@ -5,7 +5,8 @@ public class Hilo {
 
     public static void main(String[] args) 
     { // -> tokens, numbers
-        checkArgs(args);
+        int[2] bounds;
+        bounds = checkArgs(args);
 
         String playAgain;
         Scanner console = new Scanner(System.in);
@@ -20,14 +21,16 @@ public class Hilo {
         
     }
 
-    public static void checkArgs(String[] tokens)
+    public static int[] checkArgs(String[] tokens)
     {
-        if (tokens.length > 0)
+        if (tokens.length == 2)
         {
             for (int i = 0; i < tokens.length; i++)
             {
                 System.out.println(tokens[i]);
             }
+        } else {
+            return {}
         }
     }
 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pikachu Profile</title>
+</head>
+<body>
+    <h1></h1>
+    <img id="first" src="" alt="">
+    <img id="second" src="" alt="">
+
+    <script>
+        const title = document.querySelector("h1");
+        const img_1 = document.getElementById("first");
+        const img_2 = document.getElementById("second");
+        
+        /*
+        fetch("./data.json")
+            .then(response => response.json())
+            .then(result => {
+                const pikachu = result;
+                title.innerHTML = pikachu.name;
+                img.src = pikachu.front_default;
+            })
+            .catch(error => console.log(error));
+        */
+
+        fetch("https://pokeapi.co/api/v2/pokemon/pikachu")
+            .then(response => response.json())
+            .then(result => {
+                const pikachu = result;
+                title.innerHTML = pikachu.name;
+                img.src = pikachu.sprites.front_default;
+            })
+               
+    </script>
+</body>
+</html>
