@@ -5,21 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prompting</title>
     <style>
-        div.button {
+        div.btn {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background-color: salmon;
             border: 5px solid black;
             text-align: center;
             line-height: 100px;
             font-weight: bold;
             font-family: Arial, Helvetica, sans-serif;
+            margin-left: auto;
+            margin-right: auto;
+            cursor: pointer;
+        }
+
+        div.btn.one {
+            background-color: salmon;
+            margin-top: 200px;
+        }
+
+        div.btn.two {
+            background-color: yellowgreen;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="button">
+    <div class="btn one">
+        Click Me!
+    </div>
+
+    <div class="btn two">
         Click Me!
     </div>
     <script>
@@ -41,6 +57,28 @@
                 alert("Okay, see you next time!");
             }
         }  
+
+        function mouseOver(){
+            // consle.log("Over on me!");
+            document.body.style.backgroundColor = "red";
+        }
+
+        function mouseLeave(){
+            document.body.style.backgroundColor = "white";
+        }
+
+        var btnOne = document.querySelector(".one");
+        btnOne.onclick = launchPrompt;
+        btnOne.onmouseover = mouseOver;
+        btnOne.onmouseleave = mouseLeave;
+
+        var btnTwo = document.querySelector(".two");
+        btnTwo.addEventListener('click', function(){
+            // console.log("Button two pressed");
+            // alert("Button two clicked..")
+        });
+
+
 
     </script>
 </body>
