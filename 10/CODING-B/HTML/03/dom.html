@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM</title>
+</head>
+<body>
+    <h1 id="heading-satu"></h1>
+    <h1 id="heading-dua"></h1>
+    <h2></h2>
+    <script>
+        document.getElementById('heading-satu').innerHTML = "Hello, DOM!";
+        document.getElementById('heading-satu').style.color = "red";
+
+        var h2El = document.getElementById('heading-dua');
+        h2El.innerHTML = "Hello, DOM2!";
+        h2El.style.color = "salmon";
+        h2El.style.textAlign = "center";
+
+        var h2El2 = document.querySelector('h2');
+        h2El2.innerHTML = "Goodbye, DOM!";
+        h2El2.style.cssText = "color : blue; text-align : center; font-size : 30px;";
+    </script>
+</body>
+</html>

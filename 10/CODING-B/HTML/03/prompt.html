@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompting</title>
+    <style>
+        div.button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: salmon;
+            border: 5px solid black;
+            text-align: center;
+            line-height: 100px;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="button">
+        Click Me!
+    </div>
+    <script>
+        function launchPrompt()
+        {
+            alert("Hi, Welcome to My System!");
+            var confirmation = confirm("Are you sure to continue?");
+
+            if (confirmation === true)
+            {
+                alert("Okay, we continue your journey...");
+                var client = prompt("What's your name?");
+                if (client){
+                    alert(`Nice to meet you ${client}...`);
+                } else {
+                    alert('You forgot input your name!');
+                }
+            } else {
+                alert("Okay, see you next time!");
+            }
+        }  
+
+    </script>
+</body>
+</html>
