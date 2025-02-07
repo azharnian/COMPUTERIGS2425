@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        div {
+            height: 100px;
+            width: 100px;
+            background-color: salmon;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            text-align: center;
+            line-height: 100px;
+            font-size: 30px;
+            color: white;
+            font-weight: bold;
+        }
+
+        div.circle {
+            background-color: yellowgreen;
+            border: 1px solid black;
+            border-radius: 50%;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">My Buttons</h1>
+
+    <div class="box">
+        1
+    </div>
+    <div class="circle">
+        2
+    </div>
+    <div class="random">
+        3
+    </div>
+
+    <img src="ultra.jpeg" alt="Ultraman">
+
+    <script>
+        var isClicked = false;
+        var myBox = document.querySelector(".random");
+        myBox.style.backgroundColor = 'purple';
+
+        document.querySelector('img').addEventListener('click', ()=>{
+            if (!isClicked){
+                document.body.style.backgroundColor = 'red';
+            } else {
+                document.body.style.backgroundColor = 'white';
+            }
+            isClicked = !isClicked;
+                
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Float</title>
+    <style>
+        body {
+            height: 100vh;
+            background-color: orange;
+        }
+
+        header {
+            background-color: salmon;
+        }
+        nav {
+            float: right;
+            background-color: aqua;
+            width: fit-content;
+        }
+        ul {
+            background-color: gray;
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+        }
+        ul>li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: inline-block;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        div.photo {
+            display: inline-block;
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li>home</li>
+                <li>about</li>
+                <li>profile</li>
+                <li>contact</li>
+            </ul>
+            <div class="photo"></div>
+        </nav>
+        <div style="clear: right;"></div> 
+    </header>
+    
+    <hr>
+    <h2>Playlist #1</h2>
+    <ol>
+        <li>Lady Gaga</li>
+        <li>Yung Kai</li>
+        <li>Donald Trump</li>
+    </ol>
+</body>
+</html>
