@@ -1,0 +1,93 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    height: 100vh;
+    /* background-color: yellowgreen; */
+}
+
+header {
+    height: 90px;
+    /* background-color: grey; */
+    text-align: right;
+    line-height: 90px;
+    padding: 5px;
+}
+
+nav {
+    /* background-color: salmon; */
+    height: fit-content;
+}
+
+nav > a {
+    margin-right: 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: black;
+    font-weight: bold;
+}
+
+div.profile-pic {
+    float: right;
+    height: 80px;
+    width: 80px;
+    background-color: white;
+    border-radius: 50%;
+    background-image: url('ultra.jpeg');
+    background-size: cover;
+    border: 5px solid white;
+}
+
+section {
+    height: calc(100vh - 90px - 30px);
+}
+
+section p {
+    text-align: center;
+    /* margin-top: 100px; */
+    font-size: 84px;
+}
+
+span.one {
+    color: red;
+}
+
+section form{
+    /* background-color: salmon; */
+    width: 60%;
+    height: 40px;
+    margin: 0 auto;
+    padding: 5px 30px;
+    border: 1px solid black;
+    border-radius: 30px;
+}
+
+section form input[type=text] {
+    height: inherit;
+    width: 80%;
+    /* background-color: aqua; */
+    border: none;
+    outline: none;
+    font-size: 18px;
+}
+
+section form input[type=submit] {
+    height: 90%;
+    float: right;
+    /* width: 15%; */
+    border: none;
+    background-color: white;
+    font-size: 24px;
+}
+
+footer {
+    height: 30px;
+    /* background-color: aqua; */
+}
+
+footer p {
+    text-align: center;
+    font-size: 12px;
+}
