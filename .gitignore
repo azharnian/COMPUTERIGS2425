@@ -1,4 +1,9 @@
-/ANAS
+# /ANAS
+*.jpg
+*.jpeg
+*.png
+*.mp3
+*.mp4
 *.env
 /env
 /.ipynb_checkpoints
