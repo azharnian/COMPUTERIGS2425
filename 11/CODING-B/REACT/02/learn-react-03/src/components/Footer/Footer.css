@@ -1,0 +1,9 @@
+footer {
+    background-color: orange;
+    height: 30px;
+}
+
+footer p {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}

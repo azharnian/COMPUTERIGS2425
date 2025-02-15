@@ -1,0 +1,32 @@
+header {
+    /* background-color: plum; */
+}
+
+header nav {
+    width: 50%;
+    height: 80px;
+    margin: 0 auto;
+    /* background-color: cyan; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+header nav a{
+    display: inline-block;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header.dark {
+    background-color: black;
+    color: white;
+}
+
+header.dark nav a{
+    color: white;
+}
