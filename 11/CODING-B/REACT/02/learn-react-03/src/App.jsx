@@ -10,6 +10,7 @@ function App() {
       <h1>Hello, world!</h1>
       <Card color="salmon" text="Click"/>
       <Card color="yellowgreen" text="Push"/>
+      <Card />
       <Footer></Footer>
     </>
   )

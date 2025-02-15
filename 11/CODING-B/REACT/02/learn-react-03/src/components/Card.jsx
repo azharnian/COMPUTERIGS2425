@@ -10,7 +10,7 @@ export default function Card({color, text}) {
     const cardStyle = {
       width : '100px',
       height : '100px',
-      backgroundColor : color,
+      backgroundColor : color ? color : 'pink',
       display : 'flex',
       justifyContent : 'center',
       alignItem : 'center',
@@ -30,8 +30,29 @@ export default function Card({color, text}) {
       <>
         <div style={cardStyle}>
           <h3 style={textStyle}>{count}</h3>
-          <button onClick={handleClick} style={buttonStyle}>{text}</button>
+          <button onClick={handleClick} style={buttonStyle}>{text ? text : "check!"}</button>
         </div>
       </>
     )
+    /*
+    if (text)
+    {
+      return (
+      <>
+        <div style={cardStyle}>
+          <h3 style={textStyle}>{count}</h3>
+          <button onClick={handleClick} style={buttonStyle}>{text}</button>
+        </div>
+      </>
+      )
+    }
+    return (
+    <>
+      <div style={cardStyle}>
+        <h3 style={textStyle}>{count}</h3>
+        <button onClick={handleClick} style={buttonStyle}>check!</button>
+      </div>
+    </>
+    )
+    */
   }
