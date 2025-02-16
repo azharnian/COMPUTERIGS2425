@@ -48,7 +48,6 @@ class PlaylistHandler {
         };
     }
 
-    // tambah activities
     async postSongToPlaylistHandler(request, h) {
         this._validator.validateSongPayload(request.payload);
         const { songId } = request.payload;

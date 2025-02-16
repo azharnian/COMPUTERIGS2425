@@ -1,19 +1,13 @@
+const { CollaborationPayloadaSchema } = require("./schema");
 const MiscError = require("../../exceptions/MiscError");
-const { PlaylistPayloadSchema, AddSongPayloadSchema } = require("./schema");
 
-const PlaylistValidator = {
-    validatePlaylistPayload: (payload) => {
-        const validationResult = PlaylistPayloadSchema.validate(payload);
-        if (validationResult.error) {
-            throw new MiscError(validationResult.error.message);
-        }
-    },
-    validateSongPayload: (payload) => {
-        const validationResult = AddSongPayloadSchema.validate(payload);
-        if (validationResult.error) {
-            throw new MiscError(validationResult.error.message);
+const CollaborationsValidator = {
+    validateCollaborationPayload: (payload) => {
+        const validateResult = CollaborationPayloadaSchema.validate(payload);
+        if (validateResult.error) {
+            throw new MiscError(validateResult.error.message);
         }
     },
 };
 
-module.exports = PlaylistValidator;
+module.exports = CollaborationsValidator;

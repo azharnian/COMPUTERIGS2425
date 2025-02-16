@@ -1,4 +1,12 @@
 exports.up = (pgm) => {
+
+    pgm.createExtension('uuid-ossp', { ifNotExists: true });
+
+    pgm.alterColumn('songs', 'album_id', {
+        type: 'UUID',
+        using: 'album_id::uuid',
+    });
+
     pgm.addConstraint(
         'songs',
         'fk_songs.album_id_albums.id',

@@ -1,5 +1,4 @@
-const { v4 } = require("uuid");
-const { validate: isUuid } = require("uuid");
+const { v4, validate: isUuid } = require("uuid");
 const { Pool } = require("pg");
 const MiscError = require("../../exceptions/MiscError");
 const NotFoundError = require("../../exceptions/NotFoundError");

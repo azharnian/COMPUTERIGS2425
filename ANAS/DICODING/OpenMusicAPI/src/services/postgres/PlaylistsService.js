@@ -1,5 +1,4 @@
-const { v4 } = require("uuid");
-const { validate: isUuid } = require("uuid");
+const { v4, validate: isUuid } = require("uuid");
 const { Pool } = require("pg");
 const AuthorizationError = require("../../exceptions/AuthorizationError");
 const MiscError = require("../../exceptions/MiscError");
@@ -12,19 +11,21 @@ class PlaylistsService {
         this._songsService = songsService;
     }
 
+    _validateUUIDs(...ids) {
+        for (const id of ids) {
+            if (!isUuid(id)) throw new NotFoundError("Data tidak ditemukan");
+        }
+    }
+
     async addPlaylist({ name, owner }) {
         const id = v4();
-
         const query = {
             text: "INSERT INTO playlists VALUES($1, $2, $3) RETURNING id",
             values: [id, name, owner],
         };
 
         const result = await this._pool.query(query);
-
-        if (!result.rowCount) {
-            throw new MiscError("Playlist gagal ditambahkan");
-        }
+        if (!result.rowCount) throw new MiscError("Playlist gagal ditambahkan");
 
         return result.rows[0].id;
     }
@@ -43,9 +44,7 @@ class PlaylistsService {
     }
 
     async getPlaylistById(playlistId) {
-        if (!isUuid(playlistId)) {
-            throw new NotFoundError("Playlist tidak ditemukan");
-        }
+        this._validateUUIDs(playlistId);
 
         const query = {
             text: `SELECT playlists.id, playlists.name, users.username 
@@ -56,18 +55,13 @@ class PlaylistsService {
         };
 
         const result = await this._pool.query(query);
-
-        if (!result.rowCount) {
-            throw new NotFoundError("Playlist tidak ditemukan");
-        }
+        if (!result.rowCount) throw new NotFoundError("Playlist tidak ditemukan");
 
         return result.rows[0];
     }
 
     async deletePlaylistById(id) {
-        if (!isUuid(id)) {
-            throw new NotFoundError("Playlist gagal dihapus. Id tidak ditemukan");
-        }
+        this._validateUUIDs(id);
 
         const query = {
             text: "DELETE FROM playlists WHERE id = $1 RETURNING id",
@@ -75,32 +69,26 @@ class PlaylistsService {
         };
 
         const result = await this._pool.query(query);
-
-        if (!result.rowCount) {
-            throw new NotFoundError(
-                "Playlist gagal dihapus. Id tidak ditemukan"
-            );
-        }
+        if (!result.rowCount) throw new NotFoundError("Playlist gagal dihapus. Id tidak ditemukan");
     }
 
     async addSongToPlaylist(playlistId, songId) {
-        const id = v4();
-
+        this._validateUUIDs(playlistId, songId);
         await this._songsService.getSongById(songId);
 
+        const id = v4();
         const query = {
             text: "INSERT INTO playlist_songs VALUES($1, $2, $3) RETURNING id",
             values: [id, playlistId, songId],
         };
 
         const result = await this._pool.query(query);
-
-        if (!result.rowCount) {
-            throw new MiscError("Lagu gagal ditambahkan ke playlist");
-        }
+        if (!result.rowCount) throw new MiscError("Lagu gagal ditambahkan ke playlist");
     }
 
     async getSongsFromPlaylist(playlistId) {
+        this._validateUUIDs(playlistId);
+
         const query = {
             text: `SELECT songs.id, songs.title, songs.performer FROM songs
             LEFT JOIN playlist_songs ON songs.id = playlist_songs.song_id
@@ -109,97 +97,75 @@ class PlaylistsService {
         };
 
         const result = await this._pool.query(query);
-
         return result.rows;
     }
 
     async deleteSongFromPlaylist(playlistId, songId) {
+        this._validateUUIDs(playlistId, songId);
+
         const query = {
             text: "DELETE FROM playlist_songs WHERE playlist_id = $1 AND song_id = $2 RETURNING id",
             values: [playlistId, songId],
         };
 
         const result = await this._pool.query(query);
-
-        if (!result.rowCount) {
-            throw new MiscError("Lagu gagal dihapus");
-        }
+        if (!result.rowCount) throw new MiscError("Lagu gagal dihapus");
     }
 
     async verifyPlaylistOwner(id, owner) {
+        this._validateUUIDs(id);
+
         const query = {
-            text: "SELECT * FROM playlists WHERE id = $1",
+            text: "SELECT owner FROM playlists WHERE id = $1",
             values: [id],
         };
 
         const result = await this._pool.query(query);
+        if (!result.rowCount) throw new NotFoundError("Playlist tidak ditemukan");
 
-        if (!result.rowCount) {
-            throw new NotFoundError("Playlist tidak ditemukan");
-        }
-
-        const playlist = result.rows[0];
-
-        if (playlist.owner !== owner) {
-            throw new AuthorizationError(
-                "Anda tidak berhak mengakses resource ini"
-            );
+        if (result.rows[0].owner !== owner) {
+            throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
         }
     }
 
     async verifyPlaylistAccess(playlistId, userId) {
+        this._validateUUIDs(playlistId, userId);
+
         try {
             await this.verifyPlaylistOwner(playlistId, userId);
         } catch (error) {
-            if (error instanceof NotFoundError) {
-                throw error;
-            }
-            try {
-                await this._collaborationService.verifyCollaborator(
-                    playlistId,
-                    userId
-                );
-            } catch {
-                throw error;
-            }
+            if (error instanceof NotFoundError) throw error;
+            await this._collaborationService.verifyCollaborator(playlistId, userId);
         }
     }
 
     async addActivity({ playlistId, songId, credentialId, action }) {
-        const id = v4();
+        this._validateUUIDs(playlistId, songId, credentialId);
 
+        const id = v4();
         const query = {
-            text: "INSERT INTO playlist_song_activities VALUES($1, $2, $3, $4, $5) RETURNING id",
+            text: "INSERT INTO playlist_song_activities VALUES($1, $2, $3, $4, $5, NOW()) RETURNING id",
             values: [id, playlistId, songId, credentialId, action],
         };
 
         const result = await this._pool.query(query);
-
-        if (!result.rowCount) {
-            throw new MiscError("Activity gagal ditambahkan");
-        }
+        if (!result.rowCount) throw new MiscError("Activity gagal ditambahkan");
     }
 
     async getActivitiesByPlaylistId(playlistId) {
-        if (!isUuid(id)) {
-            throw new NotFoundError("Playlist tidak ditemukan");
-        }
+        this._validateUUIDs(playlistId);
+
         const query = {
             text: `SELECT users.username, songs.title, psa.action, psa.time
             FROM playlist_song_activities psa
-            JOIN users ON users.id = psa.user_id
+            JOIN users ON users.id = psa.credential_id
             JOIN songs ON songs.id = psa.song_id
             WHERE psa.playlist_id = $1
-            ORDER BY time ASC`,
+            ORDER BY psa.time ASC`,
             values: [playlistId],
         };
 
         const result = await this._pool.query(query);
-
-        if (!result.rowCount) {
-            throw new NotFoundError("Playlist tidak ditemukan");
-        }
-
         return result.rows;
     }
 }

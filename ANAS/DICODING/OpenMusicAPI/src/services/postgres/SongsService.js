@@ -1,5 +1,4 @@
-const { v4 } = require("uuid");
-const { validate: isUuid } = require("uuid");
+const { v4, validate: isUuid } = require("uuid");
 const { Pool } = require("pg");
 const MiscError = require("../../exceptions/MiscError");
 const NotFoundError = require("../../exceptions/NotFoundError");
@@ -8,6 +7,12 @@ const { mapDBSongsToModel, mapDBSongsToModelDetail } = require("../../utils");
 class SongsService {
     constructor() {
         this._pool = new Pool();
+    }
+
+    _validateUuid(id, errorMessage) {
+        if (!isUuid(id)) {
+            throw new NotFoundError(errorMessage);
+        }
     }
 
     async addSong({ title, year, performer, genre, duration, albumId }) {
@@ -68,9 +73,7 @@ class SongsService {
     }
 
     async getSongById(id) {
-        if (!isUuid(id)) {
-            throw new NotFoundError("Lagu tidak ditemukan");
-        }
+        this._validateUuid(id, "Lagu tidak ditemukan");
 
         const query = {
             text: "SELECT * FROM songs WHERE id = $1",
@@ -86,9 +89,7 @@ class SongsService {
     }
 
     async editSongById(id, { title, year, performer, genre, duration }) {
-        if (!isUuid(id)) {
-            throw new NotFoundError("Gagal memperbarui lagu. Id tidak ditemukan");
-        }
+        this._validateUuid(id, "Gagal memperbarui lagu. Id tidak ditemukan");
 
         const updatedAt = new Date().toISOString();
         const query = {
@@ -99,16 +100,12 @@ class SongsService {
         const result = await this._pool.query(query);
 
         if (!result.rowCount) {
-            throw new NotFoundError(
-                "Gagal memperbarui lagu. Id tidak ditemukan"
-            );
+            throw new NotFoundError("Gagal memperbarui lagu. Id tidak ditemukan");
         }
     }
 
     async deleteSongById(id) {
-        if (!isUuid(id)) {
-            throw new NotFoundError("Gagal menghapus lagu. Id tidak ditemukan");
-        }
+        this._validateUuid(id, "Gagal menghapus lagu. Id tidak ditemukan");
 
         const query = {
             text: "DELETE FROM songs WHERE id = $1 RETURNING id",
