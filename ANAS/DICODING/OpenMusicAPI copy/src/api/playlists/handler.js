@@ -1,3 +1,5 @@
+const ClientError = require("../../exceptions/ClientError")
+
 class PlaylistHandler {
     constructor(service, validator) {
         this._service = service;
@@ -97,6 +99,10 @@ class PlaylistHandler {
     async deleteSongFromPlaylistHandler(request) {
         const { playlistId } = request.params;
         const { songId } = request.payload;
+
+        if (!songId || typeof songId !== "string") {
+            throw new ClientError("Payload songId tidak valid", 400);
+        }
 
         const { id: credentialId } = request.auth.credentials;
         
