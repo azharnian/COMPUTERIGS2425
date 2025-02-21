@@ -5,7 +5,7 @@ const NotFoundError = require("../../exceptions/NotFoundError");
 const { mapDBAlbumsToModel } = require("../../utils");
 
 class AlbumsService {
-    constructor() {
+    constructor(storageS3Service, cacheService) {
         this._pool = new Pool();
         this._storageS3Service = storageS3Service;
         this._cacheService = cacheService;
@@ -38,7 +38,7 @@ class AlbumsService {
         if (!isUuid(id)) {
             throw new NotFoundError("Album tidak ditemukan");
         }
-
+        
         const query = {
             text: "SELECT * FROM albums WHERE id = $1",
             values: [id],
@@ -103,6 +103,7 @@ class AlbumsService {
     }
 
     async updateCoverAlbum({ id, cover }) {
+        console.log("run!");
         if (!isUuid(id)) {
             throw new NotFoundError("Gagal memperbarui album. Id tidak ditemukan");
         }

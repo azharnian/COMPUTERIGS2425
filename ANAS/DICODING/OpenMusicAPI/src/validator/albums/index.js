@@ -12,7 +12,7 @@ const AlbumsValidator = {
 
     validateCoverAlbumImageHeaders: (headers) => {
         const validationResult = ImageHeadersSchema.validate(headers);
-
+        
         if (validationResult.error) {
             console.log(validationResult.error.message, "validationResult.error.message");
             throw new MiscError(validationResult.error.message);

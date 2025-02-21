@@ -8,6 +8,7 @@ const users = require("./api/users");
 const authentications = require("./api/authentications");
 const playlists = require("./api/playlists");
 const collaborations = require("./api/collaborations");
+const _exports = require("./api/exports");
 
 
 const SongsService = require("./services/postgres/SongsService");
@@ -16,6 +17,9 @@ const UsersService = require("./services/postgres/UsersService");
 const AuthenticationsService = require("./services/postgres/AuthenticationsService");
 const PlaylistsService = require("./services/postgres/PlaylistsService");
 const CollaborationsService = require("./services/postgres/CollaborationsService");
+const ProducerService = require("./services/rabbitmq/ProducerService");
+const StorageService = require("./services/S3/StorageService");
+const CacheService = require("./services/redis/CacheService");
 
 const SongsValidator = require("./validator/songs");
 const AlbumsValidator = require("./validator/albums");
@@ -23,21 +27,25 @@ const UsersValidator = require("./validator/users");
 const AuthenticationsValidator = require("./validator/authentications");
 const PlaylistValidator = require("./validator/playlists");
 const CollaborationsValidator = require("./validator/collaborations");
+const ExportsValidator = require("./validator/exports");
 
 const ClientError = require("./exceptions/ClientError");
 const TokenManager = require("./tokenize/TokenManager");
+const config = require("./utils/config");
 
 const init = async () => {
+    const storageService = new StorageService();
+    const cacheService = new CacheService();
     const songsService = new SongsService();
-    const albumsService = new AlbumsService();
+    const albumsService = new AlbumsService(storageService, cacheService);
     const usersService = new UsersService();
     const authenticationsService = new AuthenticationsService();
     const collaborationsService = new CollaborationsService(usersService);
     const playlistsService = new PlaylistsService(collaborationsService, songsService);
 
     const server = Hapi.server({
-        port: process.env.PORT,
-        host: process.env.HOST,
+        port: config.app.port,
+        host: config.app.host,
         routes: {
             cors: {
                 origin: ["*"],
@@ -52,12 +60,12 @@ const init = async () => {
     ]);
 
     server.auth.strategy("songsapp_jwt", "jwt", {
-        keys: process.env.ACCESS_TOKEN_KEY,
+        keys: config.jwt.accessTokenKey,
         verify: {
             aud: false,
             iss: false,
             sub: false,
-            maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+            maxAgeSec: config.jwt.accessTokenAge,
         },
         validate: (artifacts) => ({
             isValid: true,
@@ -112,6 +120,14 @@ const init = async () => {
                 collaborationsService,
                 playlistsService,
                 validator: CollaborationsValidator,
+            },
+        },
+        {
+            plugin: _exports,
+            options: {
+                service: ProducerService,
+                validator: ExportsValidator,
+                playlistsService,
             },
         },
     ]);

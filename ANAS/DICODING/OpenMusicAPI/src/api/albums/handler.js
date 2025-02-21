@@ -1,5 +1,5 @@
 class AlbumsHandler {
-    constructor(service, validator) {
+    constructor(service, validator, s3Service) {
         this._service = service;
         this._validator = validator;
         this._s3_service = s3Service;
@@ -62,8 +62,9 @@ class AlbumsHandler {
     async postCoverAlbumHandler(request, h) {
         const { cover } = request.payload;
         const { id } = request.params;
+        
         this._validator.validateCoverAlbumImageHeaders(cover.hapi.headers);
-
+        
         await this._service.getAlbumById(id);
 
         await this._service.updateCoverAlbum({ id, cover });
