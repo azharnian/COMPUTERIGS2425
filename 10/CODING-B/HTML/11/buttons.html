@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Buttons</title>
+</head>
+<body>
+    <nav>
+        <button id="one" data-color="red" data-number="30">🤡</button>
+        <button id="two" data-color="green" data-number="40">☘️</button>
+        <button id="three" data-color="blue" data-number="50">🐠</button>
+    </nav>
+    
+    <script>
+        // document.getElementById("one").addEventListener("click", function(){
+        //     document.body.style.backgroundColor = this.dataset.color;
+        // })
+
+        document.querySelectorAll("button").forEach(function(button){
+            
+            button.addEventListener('click', function(){
+                document.body.style.backgroundColor = this.dataset.color;
+            })
+
+        })
+        
+        /*
+        const pets = ["cat", "fish", "dog"];
+
+        pets.forEach(function(pet, index){
+            console.log(index, pet);
+        })
+
+        // by value
+        for (const pet of pets)
+        {
+            console.log(pet);
+        }
+
+        // by index
+        for (const pet in pets)
+        {
+            console.log(pet);
+        }
+        */
+
+    </script>
+</body>
+</html>
