@@ -51,10 +51,15 @@
     <script>
         const outputText = document.getElementById("output");
 
+        function concatNumber(number)
+        {
+            outputText.innerHTML += number;
+            outputText.innerHTML = parseInt(outputText.innerHTML);
+        }
+
         document.querySelectorAll("#number").forEach(function(button){
             button.addEventListener('click', function(){
-                outputText.innerHTML += button.innerHTML;
-                outputText.innerHTML = parseInt(outputText.innerHTML);
+                concatNumber(button.innerHTML);
             })
         });
 
@@ -62,6 +67,30 @@
             button.addEventListener('click', function(){
                 console.log(button.innerHTML);
             })
+        });
+
+        document.getElementById("del").addEventListener('click', function(){
+            let str = outputText.innerHTML;
+            const len = str.length;
+
+            if (len > 1)
+            {
+                str = str.substring(0, str.length - 1);
+                outputText.innerHTML = parseInt(str);
+            } else if (len === 1)
+            {
+                outputText.innerHTML = 0;
+            }
+        });
+
+        document.addEventListener('keydown', function(event){
+            if (event.keyCode >= 48 && event.keyCode <= 57)
+            {
+                concatNumber(event.key);
+            } else if (event.key === "Backspace")
+            {
+                
+            }
         });
     </script>
 </body>
