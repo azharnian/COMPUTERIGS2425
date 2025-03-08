@@ -63,7 +63,20 @@
 
         function concatOperator(operator)
         {
-            outputText.innerHTML += operator;
+            const text = outputText.innerHTML;
+            const lastChar = text[ text.length - 1 ];
+
+            if ( lastChar === operator)
+            {
+                return;
+            } else if (lastChar.charCodeAt(0) >= 48 && lastChar.charCodeAt(0) <= 57) 
+            {
+                outputText.innerHTML += operator;
+            } else 
+            {
+                outputText.innerHTML = outputText.innerHTML.substring(0, text.length - 1) + operator;
+            }
+            
         }
 
         function deleteLastNumber()
