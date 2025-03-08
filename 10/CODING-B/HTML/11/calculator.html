@@ -42,7 +42,7 @@
             <button id="operator">-</button>
             <button id="operator">x</button>
             <button id="operator">:</button>
-            <button id="operator">=</button>
+            <button id="equals">=</button>
             <button id="operator">%</button>
             <button id="operator">.</button>
         </section>
@@ -54,7 +54,31 @@
         function concatNumber(number)
         {
             outputText.innerHTML += number;
-            outputText.innerHTML = parseInt(outputText.innerHTML);
+            if (outputText.innerHTML[0] === "0")
+            {
+                outputText.innerHTML = parseInt(outputText.innerHTML);
+            }
+            
+        }
+
+        function concatOperator(operator)
+        {
+            outputText.innerHTML += operator;
+        }
+
+        function deleteLastNumber()
+        {
+            let str = outputText.innerHTML;
+            const len = str.length;
+
+            if (len > 1)
+            {
+                str = str.substring(0, str.length - 1);
+                outputText.innerHTML = str;
+            } else if (len === 1)
+            {
+                outputText.innerHTML = 0;
+            }
         }
 
         document.querySelectorAll("#number").forEach(function(button){
@@ -65,22 +89,22 @@
 
         document.querySelectorAll("#operator").forEach(function(button){
             button.addEventListener('click', function(){
-                console.log(button.innerHTML);
+                concatOperator(button.innerHTML);
             })
         });
 
         document.getElementById("del").addEventListener('click', function(){
-            let str = outputText.innerHTML;
-            const len = str.length;
+            deleteLastNumber();
+        });
 
-            if (len > 1)
-            {
-                str = str.substring(0, str.length - 1);
-                outputText.innerHTML = parseInt(str);
-            } else if (len === 1)
-            {
-                outputText.innerHTML = 0;
-            }
+        document.getElementById("equals").addEventListener('click', function(){
+            let finalText = outputText.innerHTML;
+
+            finalText = finalText.replace("x", "*");
+            finalText = finalText.replace(":", "/");
+            finalText = finalText.replace("%", "/100");
+
+            outputText.innerHTML = eval(finalText);
         });
 
         document.addEventListener('keydown', function(event){
@@ -89,7 +113,7 @@
                 concatNumber(event.key);
             } else if (event.key === "Backspace")
             {
-                
+                deleteLastNumber();
             }
         });
     </script>
