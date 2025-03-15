@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callback</title>
+</head>
+<body>
+    
+
+    <script>
+        function add_number(a, b)
+        {
+            return a + b;
+        }
+
+        function mult_number(a, b)
+        {
+            return a * b;
+        }
+
+        function printToDocument(element, a, b, callbackFunc)
+        {
+            const el = document.createElement(element);
+            el.innerHTML = callbackFunc(a, b);
+            document.body.append(el);
+        }
+
+        console.log(add_number(10, 20));
+        console.log(mult_number(50, 2));
+
+        printToDocument("h1", 10, 20, mult_number);
+        printToDocument("h2", 10, 70, add_number);
+
+        printToDocument("h3", 100, 200, function(a, b){
+            return a * b + 100;
+        });
+
+        printToDocument("h4", 1000, 2000, (a, b)=>{
+            return (b / a) * a;
+        });
+
+    </script>
+</body>
+</html>

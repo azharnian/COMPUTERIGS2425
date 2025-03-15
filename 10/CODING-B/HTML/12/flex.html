@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Flex</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            height: 80px;
+        }
+
+        nav.one {
+            text-align: center;
+            background-color: salmon;
+            line-height: 80px;
+            
+        }
+
+        nav.one a {
+            margin: 0px 5px;
+        }  
+        
+        nav.two {
+            display: flex;
+            background-color: yellowgreen;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+        }
+
+        @media (max-width: 600px) {
+            nav.one {
+                display: none;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            nav.one {
+                background-color: aqua;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="one">
+        <a href="">home</a>
+        <a href="">about</a>
+        <a href="">profile</a>
+        <a href="">contact</a>
+    </nav>
+
+    <nav class="two">
+        <a href="">home</a>
+        <a href="">about</a>
+        <a href="">profile</a>
+        <a href="">contact</a>
+    </nav>
+</body>
+</html>

@@ -34,6 +34,7 @@
             <button id="number">2</button>
             <button id="number">1</button>
             <button id="number">0</button>
+            <button id="number">.</button>
         </section>
         <section class="operators">
             <button id="operator">(</button>
@@ -44,7 +45,6 @@
             <button id="operator">:</button>
             <button id="equals">=</button>
             <button id="operator">%</button>
-            <button id="operator">.</button>
         </section>
     </section>
 
@@ -53,11 +53,19 @@
 
         function concatNumber(number)
         {
-            outputText.innerHTML += number;
-            if (outputText.innerHTML[0] === "0")
+              
+            if (number == ".")
             {
-                outputText.innerHTML = parseInt(outputText.innerHTML);
+                outputText.innerHTML += number;
+                return;
             }
+            if (outputText.innerHTML[0] === "0" && outputText.length <= 2)
+            {
+                outputText.innerHTML += number;
+                outputText.innerHTML = parseInt(outputText.innerHTML);
+                return;
+            }
+            outputText.innerHTML += number;
             
         }
 
