@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My LinkTree</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-image: linear-gradient(to bottom right, red, yellow);
+        }
+
+        div.main, header, section, footer {
+            display: flex;
+        }
+
+        div.main {
+            height: 100vh;
+            margin: 0 auto;
+            width: 400px;
+            /* background-color: salmon; */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* gap: 20px; */
+        }
+
+        header, section, footer {
+            width: 70%;
+        }
+
+        header {
+            height: 150px;
+            /* background-color: aqua; */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        header div.profile-picture {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+            background-color: white;
+        }
+
+        section {
+            /* height: calc(100vh - 80px - 40px); */
+            flex: 1 0 auto;
+            /* background-color: white; */
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        section a {
+            display: block;
+            border: 1px black solid;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            border-radius: 20px;
+            text-decoration: none;
+        }
+
+        footer {
+            height: 40px;
+            /* background-color: lightgray; */
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        footer a {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            background-color: gray;
+            border-radius: 50%;
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main">
+        <header>
+            <div class="profile-picture"></div>
+            <h1 class="name">John Doe</h1>
+        </header>
+        <section>
+            <a href="">Link 1</a>
+            <a href="">Link 2</a>
+            <a href="">Link 3</a>
+            <a href="">Link 4</a>
+        </section>
+        <footer>
+            <a href="">🐈</a>
+            <a href="">🗿</a>
+            <a href="">🍣</a>
+        </footer>
+    </div>
+</body>
+</html>
