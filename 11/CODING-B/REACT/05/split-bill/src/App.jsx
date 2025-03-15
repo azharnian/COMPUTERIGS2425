@@ -1,8 +1,24 @@
+import { useState } from "react";
+import friendsJSON from "./friends.json";
+import FriendList from "./components/FriendList";
+
 function App() {
+  const [friends, setFriends] = useState(friendsJSON);
+  const [showAddFriend, setShowAddFriend] = useState(false);
+  const [selectedFriend, setSelectedFriend] = useState(null);
 
   return (
     <>
-      <h1>Hello, World!</h1>
+      <div className="app">
+        <div className="sidebar">
+
+          <FriendList
+            friends={friends}
+          />
+
+        </div>
+
+      </div>
     </>
   )
 }
