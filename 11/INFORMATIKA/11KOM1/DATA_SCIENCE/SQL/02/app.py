@@ -1,46 +1,45 @@
+import os
 import sqlite3
 from models.employee import Employee
 
 connection = sqlite3.connect("data.db")
 cursor = connection.cursor()
 
-def init_db():
-    cursor.execute(
-        '''
-        CREATE TABLE IF NOT EXISTS employees(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            first TEXT,
-            last TEXT,
-            pay INTEGER
-        );
+from services.sql import *
 
-        '''
-    )
-    connection.commit()
+def show_menu():
+    os.system("clear")
+    print("""
+(1) Add Employee
+(2) Get Employee by id
+(3) Get Employee by last name
+(e) Exit 
+          """)
+    
+def execute_insert_emp():
+    print( "\n-- Add Employee")
+    first = input("First Name : ")
+    last = input("Last Name : ")
+    pay = int(input("Salary : "))
 
-def insert_emp(emp):
-    try :
-        with connection:
-            cursor.execute("""
-                INSERT INTO employees (first, last, pay)
-                VALUES (?, ?, ?)
-
-            """, (emp.first, emp.last, emp.pay))
-    except Exception as e:
-        raise Exception(f"Error : {e}")
-
-def get_all_emps():
-    cursor.execute("""
-        SELECT * FROM employees;
-    """)
-    return cursor.fetchall()
+    emp = Employee(first, last, pay)
+    insert_emp(emp)
+    input("DONE!")
 
 def main():
     init_db()
-
-    # emp = Employee('Jane', 'Doe', '4000')
-    # insert_emp(emp)
-    print(get_all_emps())
+    while True:
+        show_menu()
+        user_input = input("Your input : ")
+        if user_input == "1":
+            execute_insert_emp()
+        elif user_input == "2":
+            pass
+        elif user_input == "3":
+            pass
+        elif user_input == "e":
+            os.system("clear")
+            break
 
 if __name__ == "__main__":
     main()
