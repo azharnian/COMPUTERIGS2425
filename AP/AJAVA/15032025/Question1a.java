@@ -2,7 +2,7 @@ public class Question1a
 {
     public static void main(String[] args)
     {
-        // System.out.println(convertToBinary(8));
+        System.out.println(convertToBinary(8));
         System.out.println(convertToDecimal("1000"));
         System.out.println(convertToDecimal("111"));
     }
@@ -16,7 +16,7 @@ public class Question1a
             res = number % 2 + res;
             number /= 2;
         }
-        return res;
+        return res; // Integer.toBinaryString(number);
     }
 
     public static String convertToDecimal(String bin)
@@ -31,6 +31,6 @@ public class Question1a
                 res += Math.pow(2, bin.length() - i - 1);
         }
 
-        return ""+res;
+        return ""+res; // Integer.parseInt(bin, 2);
     }
 }

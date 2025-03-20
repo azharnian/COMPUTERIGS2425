@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Cart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Rubik', sans-serif;
+            background-color: #EEF0F4;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            max-width: 320px;
+            margin: 30px auto;
+        }
+
+        img {
+            width: 150px;
+            margin: 0 auto;
+        }
+
+        input {
+            color: #432000;
+            background-color: #DCE1EB;
+            border: 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        button {
+            color: #FDFDFD;
+            background-color: #AC485A;
+            border: 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        ul {
+            margin-top: 20px;
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            gap: 10px;
+            /* background-color: salmon; */
+            flex-wrap: wrap;
+        }
+
+        ul li {
+            font-size: 20px;
+            background-color: #FFFDF8;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            /* flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: auto; */
+            flex: 1 1 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://www.freepnglogos.com/uploads/rabbit-png/download-rabbit-png-image-png-image-pngimg-4.png" alt="rabbit with cart">
+
+        <form action="" id="formInput">
+            <input type="text" id="input-field" placeholder="Bread">
+            <button id="add-btn">Add to cart</button>
+        </form>
+        
+        <ul id="shopping-list">
+            <li>Orange</li>
+            <li>Hot Dogs</li>
+            <li>Bread</li>
+            <li>Fish</li>
+            <li>Pizza</li>
+        </ul>
+    </div>
+
+    <script>
+        const inputFieldEl = document.getElementById("input-field");
+        const addBtnEl = document.getElementById("add-btn");
+        const shoppingListEl = document.getElementById("shopping-list");
+        const formEl = document.getElementById("formInput");
+
+        addBtnEl.addEventListener('click', () => {
+            const data = inputFieldEl.value;
+            const cleanData = data.trim();
+
+            if (cleanData.length > 0){
+                shoppingListEl.innerHTML += `<li>${data}</li>`;
+                inputFieldEl.value = "";
+                alert('Success.')
+            } else {
+                alert('Invalid input. Please try again.')
+            }
+
+            
+        })
+
+        formEl.addEventListener('submit', () => {
+            // do the same thing
+        })
+
+    </script>
+</body>
+</html>

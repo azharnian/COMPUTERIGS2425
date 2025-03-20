@@ -4,8 +4,14 @@ import FriendList from "./components/FriendList";
 
 function App() {
   const [friends, setFriends] = useState(friendsJSON);
-  const [showAddFriend, setShowAddFriend] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState(null);
+
+  function onSelectedFriend(friend) {
+    setSelectedFriend( selectedFriend =>
+      selectedFriend?.id === friend.id ? null : friend
+    );
+    console.log(friend);
+  }
 
   return (
     <>
@@ -14,6 +20,8 @@ function App() {
 
           <FriendList
             friends={friends}
+            onSelectedFriend={onSelectedFriend}
+            selectedFriend={selectedFriend}
           />
 
         </div>
