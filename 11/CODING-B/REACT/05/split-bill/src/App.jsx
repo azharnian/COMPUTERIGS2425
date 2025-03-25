@@ -1,6 +1,7 @@
 import { useState } from "react";
 import friendsJSON from "./friends.json";
 import FriendList from "./components/FriendList";
+import FormSplitBill from "./components/FormSplitBill";
 
 function App() {
   const [friends, setFriends] = useState(friendsJSON);
@@ -25,6 +26,12 @@ function App() {
           />
 
         </div>
+
+        {selectedFriend && (
+        <FormSplitBill
+          selectedFriend={selectedFriend}
+        />
+        )}
 
       </div>
     </>
