@@ -1,0 +1,22 @@
+<script>
+
+    var userInput;
+    var randomNumber = Math.floor(Math.random() * (10 - 1 + 1)) + 10;
+
+    while (true)
+    {
+        userInput = prompt("Tebak angka antara 1 dan 10 : ");
+        if (userInput == randomNumber)
+        {
+            alert("Kamu menang!");
+            break;
+        } else if (userInput > randomNumber)
+        {
+            alert("Angka lebih kecil dari " + userInput);
+        } else if (userInput < randomNumber)
+        {
+            alert("Angka lebih besar dari " + userInput);
+        }
+    }
+
+</script>
