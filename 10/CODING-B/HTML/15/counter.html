@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter</title>
+</head>
+<body>
+    <h1 id="number">0</h1>
+    <div class="buttons">
+        <button id="add" >+</button>
+        <button id="sub" >-</button>
+    </div>
+    <script>
+        let number = 0;
+        const numberEl = document.getElementById("number");
+        const addBtn = document.getElementById("add");
+        const subBtn = document.getElementById("sub");
+
+        function renderNumber(n)
+        {
+            numberEl.innerHTML = n;
+        }
+
+
+        if (localStorage.getItem("numberCounter"))
+        {
+            number = parseInt(localStorage.getItem("numberCounter"));
+            renderNumber(number);
+        } 
+        
+
+        addBtn.addEventListener('click', () => {
+            number += 1;
+            localStorage.setItem("numberCounter", number);
+            renderNumber(number);
+        })
+
+        subBtn.addEventListener('click', () => {
+            number -= 1;
+            localStorage.setItem("numberCounter", number);
+            renderNumber(number);
+        })
+    </script>
+</body>
+</html>
