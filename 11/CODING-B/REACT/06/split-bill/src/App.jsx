@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import friendsJSON from "./friends.json";
 import FriendList from "./components/FriendList";
 import FormSplitBill from "./components/FormSplitBill";
+import FormAddFriend from "./components/FormAddFriend";
 
 function App() {
   const [friends, setFriends] = useState(() => {
@@ -10,6 +11,7 @@ function App() {
   });
   
   const [selectedFriend, setSelectedFriend] = useState(null);
+  const [showAddFriend, setShowAddFriend] = useState(false);
 
   function onSelectedFriend(friend) {
     setSelectedFriend( selectedFriend =>
@@ -41,6 +43,14 @@ function App() {
     setSelectedFriend(null);
   }
 
+  function handleShowAddFriend(){
+    setShowAddFriend((show) => !show);
+  };
+
+  function onAddNewFriend(friend){
+    setFriends((friends) => [...friends, friend]);
+  };
+
   return (
     <>
       <div className="app">
@@ -52,6 +62,10 @@ function App() {
             selectedFriend={selectedFriend}
           />
 
+          <button className="button" onClick={handleShowAddFriend}>
+            Tambah Teman
+          </button>
+
         </div>
 
         {selectedFriend && (
@@ -62,6 +76,13 @@ function App() {
         )}
 
       </div>
+
+      {showAddFriend && (
+        <FormAddFriend 
+          onAddNewFriend={onAddNewFriend}
+          onClose={handleShowAddFriend}
+        />
+      )}
     </>
   )
 }

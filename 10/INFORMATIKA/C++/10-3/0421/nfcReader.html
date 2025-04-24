@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NFC Reader</title>
+</head>
+<body>
+  <h2>NFC Reader (Chrome Android)</h2>
+  <button id="startNfc">Scan NFC</button>
+  <p id="output"></p>
+
+  <script>
+    const output = document.getElementById('output');
+    const btn = document.getElementById('startNfc');
+
+    btn.addEventListener('click', async () => {
+      if ('NDEFReader' in window) {
+        try {
+          const ndef = new NDEFReader();
+          await ndef.scan();
+          output.textContent = 'Scanning...';
+
+          ndef.onreading = event => {
+            const decoder = new TextDecoder();
+            for (const record of event.message.records) {
+              const text = decoder.decode(record.data);
+              output.textContent = `NFC Data: ${text}`;
+            }
+          };
+
+          ndef.onreadingerror = () => {
+            output.textContent = 'Gagal membaca tag NFC.';
+          };
+        } catch (error) {
+          output.textContent = `Error: ${error}`;
+        }
+      } else {
+        output.textContent = 'NFC tidak didukung di browser ini.';
+      }
+    });
+  </script>
+</body>
+</html>
