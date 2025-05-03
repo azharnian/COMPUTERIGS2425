@@ -1,0 +1,9 @@
+{
+    "name" : "sisy",
+    "age" : 10,
+    "hobbies" : [
+        "eat",
+        "play",
+        "meow"
+    ]
+}

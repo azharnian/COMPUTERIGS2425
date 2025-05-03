@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { OMDB_API_KEY } from "./config";
 
+import NavBar from "./components/Navbar";
+import Logo from "./components/Logo";
+import SearchInput from "./components/Search";
+
 function App() {
   const [query, setQuery] = useState("oppenheimer");
   const [movies, setMovies] = useState([]);
@@ -34,6 +38,10 @@ function App() {
 
   return (
     <>
+      <NavBar>
+        <Logo />
+        <SearchInput query={query} setQuery={setQuery} />
+      </NavBar>
     </>
   )
 }
