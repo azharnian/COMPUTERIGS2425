@@ -1,51 +1,105 @@
-from dotenv import load_dotenv
+from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
-from flask import Flask, render_template, jsonify, request
 
-load_dotenv()
-app = Flask("__name__")
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-users = [
-    {
-        "name" : "John Doe",
-        "age" : 100,
-        "died" : True
-    },
-    {
-        "name" : "Jane Doe",
-        "age" : 50,
-        "died" : False
-    }
-]
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+class Player(db.Model):
+    __tablename__ = "players"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    age = db.Column(db.Integer, nullable=False)
+    games_played = db.Column(db.Integer, default=0)
+    highest_score = db.Column(db.Integer, default=0)
+    current_score = db.Column(db.Integer, default=0)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "age": self.age,
+            "games_played": self.games_played,
+            "highest_score": self.highest_score,
+            "current_score": self.current_score,
+        }
+
+    def __repr__(self):
+        return f"Player : {self.name}"
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return "It works!"
 
-@app.route("/users", methods=["GET", "POST"])
-def get_users():
+# curl -X GET http://127.0.0.1:5000/players
+@app.route("/players", methods=["GET"])
+def get_players():
+    players = Player.query.all()
+    return jsonify([p.to_dict() for p in players]), 200
 
-    if request.method == "POST":
+
+# curl -X GET http://127.0.0.1:5000/players/1
+@app.route("/players/<int:player_id>", methods=["GET"])
+def get_player(player_id):
+    player = Player.query.get(player_id)
+    if player:
+        return jsonify(player.to_dict()), 200
+    return jsonify({"status" : "not found"}), 404
+
+"""
+curl -X POST http://127.0.0.1:5000/players \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John Doe", "age": 25, "games_played": 10, "highest_score": 1200, "current_score": 300}'
+
+"""
+@app.route("/players", methods=["POST"])
+def create_player():
+    data = request.json
+    player = Player(
+        name=data["name"],
+        age=data["age"],
+        games_played=data.get("games_played", 0),
+        highest_score=data.get("highest_score", 0),
+        current_score=data.get("current_score", 0),
+    )
+    db.session.add(player)
+    db.session.commit()
+    return jsonify(player.to_dict()), 201
+
+"""
+curl -X PATCH http://127.0.0.1:5000/players/1 \
+  -H "Content-Type: application/json" \
+  -d '{"current_score": 450}'
+"""
+@app.route("/players/<int:player_id>", methods=["PATCH"])
+def update_player(player_id):
+    player = Player.query.get(player_id)
+    if player:
         data = request.json
-        user = {
-            "name" : data["name"],
-            "age" : data["age"],
-            "died" : data["died"]
-        }
-        users.append(user)
-        return jsonify({ "status":"success", "data":user }), 201
-
-    return jsonify(users), 200
-
-@app.route("/users/<int:id>")
-def get_user_by_id(id):
-    try:
-        user = users[id]
-    except:
-        return jsonify({"status" : "Not Found"}), 404
-    
-    return jsonify(user), 200
+        for field in ["name", "age", "games_played", "highest_score", "current_score"]:
+            if field in data:
+                setattr(player, field, data[field])
+        db.session.commit()
+        return jsonify(player.to_dict()), 200
+    return jsonify({"status" : "failed to update"}), 404
 
 
-if __name__ == "__main__":  
+# curl -X DELETE http://127.0.0.1:5000/players/1
+@app.route("/players/<int:player_id>", methods=["DELETE"])
+def delete_player(player_id):
+    player = Player.query.get(player_id)
+    if player:
+        db.session.delete(player)
+        db.session.commit()
+        return jsonify({"message": "Player deleted"}), 200
+    return jsonify({"status" : "failed to delete"}), 404
+
+
+if __name__ == "__main__":
     app.run(debug=True)
