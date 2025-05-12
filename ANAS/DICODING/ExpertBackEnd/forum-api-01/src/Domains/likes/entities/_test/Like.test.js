@@ -1,39 +1,40 @@
-const Like = require('../Like');
+const Like = require("../Like");
+const { v4: uuidv4 } = require("uuid");
 
-describe('Like entity', () => {
-  it('should throw error when payload not contain needed property', () => {
+describe("Like entity", () => {
+    it("should throw error when payload not contain needed property", () => {
     // Arrange
-    const payload = {
-      commentId: 'comment-123',
-    };
+        const payload = {
+            commentId: uuidv4(), // commentId valid
+        };
 
-    // Action & Assert
-    expect(() => new Like(payload)).toThrowError('LIKE.NOT_CONTAIN_NEEDED_PROPERTY');
-  });
+        // Action & Assert
+        expect(() => new Like(payload)).toThrowError("LIKE.NOT_CONTAIN_NEEDED_PROPERTY");
+    });
 
-  it('should throw error when payload does not meet data type requirements', () => {
+    it("should throw error when payload does not meet data type requirements", () => {
     // Arrange
-    const payload = {
-      commentId: 123,
-      owner: true,
-    };
+        const payload = {
+            commentId: uuidv4(), // commentId valid
+            owner: true, // owner harus berupa uuid
+        };
 
-    // Action & Assert
-    expect(() => new Like(payload)).toThrowError('LIKE.NOT_MEET_DATA_TYPE_SPECIFICATION');
-  });
+        // Action & Assert
+        expect(() => new Like(payload)).toThrowError("LIKE.NOT_MEET_DATA_TYPE_SPECIFICATION");
+    });
 
-  it('should create NewReply entities correctly', () => {
+    it("should create Like entities correctly", () => {
     // Arrange
-    const payload = {
-      commentId: 'comment-123',
-      owner: 'user-123',
-    };
+        const payload = {
+            commentId: uuidv4(), // commentId valid
+            owner: uuidv4(),
+        };
 
-    // Action
-    const newLike = new Like(payload);
+        // Action
+        const newLike = new Like(payload);
 
-    // Assert
-    expect(newLike.commentId).toEqual(payload.commentId);
-    expect(newLike.owner).toEqual(payload.owner);
-  });
+        // Assert
+        expect(newLike.commentId).toEqual(payload.commentId);
+        expect(newLike.owner).toEqual(payload.owner);
+    });
 });
