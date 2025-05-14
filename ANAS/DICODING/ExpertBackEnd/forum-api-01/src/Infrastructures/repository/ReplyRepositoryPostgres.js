@@ -1,13 +1,13 @@
+const { v4: uuidv4 } = require("uuid");
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const AuthorizationError = require("../../Commons/exceptions/AuthorizationError");
 const AddedReply = require("../../Domains/replies/entities/AddedReply");
 const ReplyRepository = require("../../Domains/replies/ReplyRepository");
 
 class ReplyRepositoryPostgres extends ReplyRepository {
-    constructor(pool, idGenerator) {
+    constructor(pool) {
         super();
         this._pool = pool;
-        this._idGenerator = idGenerator;
     }
 
     async checkReplyAvailability(replyId, commentId) {
@@ -40,18 +40,18 @@ class ReplyRepositoryPostgres extends ReplyRepository {
         const result = await this._pool.query(query);
         const reply = result.rows[0];
 
-        if (reply.owner !== owner) {
+        if (!reply || reply.owner !== owner) {
             throw new AuthorizationError("akses dilarang");
         }
     }
 
     async addReply(userId, commentId, newReply) {
         const { content } = newReply;
-        const id = `reply-${this._idGenerator()}`;
+        const id = uuidv4();
         const date = new Date().toISOString();
 
         const query = {
-            text: "INSERT INTO replies VALUES($1, $2, $3, $4, $5) RETURNING id, content, owner",
+            text: "INSERT INTO replies (id, content, date, comment, owner) VALUES($1, $2, $3, $4, $5) RETURNING id, content, owner",
             values: [id, content, date, commentId, userId],
         };
 
@@ -62,28 +62,34 @@ class ReplyRepositoryPostgres extends ReplyRepository {
 
     async getRepliesByCommentId(commentId) {
         const query = {
-            text: "SELECT replies.id, users.username, replies.date, replies.content, replies.is_delete FROM replies LEFT JOIN users ON users.id = replies.owner WHERE replies.comment = $1 ORDER BY replies.date ASC",
+            text: `
+                SELECT replies.id, users.username, replies.date, replies.content, replies.is_delete 
+                FROM replies 
+                LEFT JOIN users ON users.id = replies.owner 
+                WHERE replies.comment = $1 
+                ORDER BY replies.date ASC
+            `,
             values: [commentId],
         };
 
         const result = await this._pool.query(query);
-
         return result.rows;
     }
 
     async getRepliesByThreadId(threadId) {
         const query = {
-            text: `SELECT replies.*, users.username 
-      FROM replies
-      LEFT JOIN users ON users.id = replies.owner
-      LEFT JOIN comments ON comments.id = replies.comment
-      WHERE comments.thread = $1 AND comments.is_delete = false
-      ORDER BY replies.date ASC`,
+            text: `
+                SELECT replies.*, users.username 
+                FROM replies
+                LEFT JOIN users ON users.id = replies.owner
+                LEFT JOIN comments ON comments.id = replies.comment
+                WHERE comments.thread = $1 AND comments.is_delete = false
+                ORDER BY replies.date ASC
+            `,
             values: [threadId],
         };
 
         const result = await this._pool.query(query);
-
         return result.rows;
     }
 

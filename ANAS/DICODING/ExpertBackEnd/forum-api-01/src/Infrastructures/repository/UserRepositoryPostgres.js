@@ -1,12 +1,12 @@
+const { v4: uuidv4 } = require('uuid');
 const InvariantError = require("../../Commons/exceptions/InvariantError");
 const RegisteredUser = require("../../Domains/users/entities/RegisteredUser");
 const UserRepository = require("../../Domains/users/UserRepository");
 
 class UserRepositoryPostgres extends UserRepository {
-    constructor(pool, idGenerator) {
+    constructor(pool) {
         super();
         this._pool = pool;
-        this._idGenerator = idGenerator;
     }
 
     async verifyAvailableUsername(username) {
@@ -24,10 +24,10 @@ class UserRepositoryPostgres extends UserRepository {
 
     async addUser(registerUser) {
         const { username, password, fullname } = registerUser;
-        const id = `user-${this._idGenerator()}`;
+        const id = uuidv4();
 
         const query = {
-            text: "INSERT INTO users VALUES($1, $2, $3, $4) RETURNING id, username, fullname",
+            text: "INSERT INTO users (id, username, password, fullname) VALUES($1, $2, $3, $4) RETURNING id, username, fullname",
             values: [id, username, password, fullname],
         };
 
@@ -63,9 +63,7 @@ class UserRepositoryPostgres extends UserRepository {
             throw new InvariantError("user tidak ditemukan");
         }
 
-        const { id } = result.rows[0];
-
-        return id;
+        return result.rows[0].id;
     }
 }
 

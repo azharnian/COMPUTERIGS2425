@@ -1,16 +1,26 @@
+const { v4: uuidv4, validate: uuidValidate } = require("uuid");
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const AuthorizationError = require("../../Commons/exceptions/AuthorizationError");
 const AddedComment = require("../../Domains/comments/entities/AddedComment");
 const CommentRepository = require("../../Domains/comments/CommentRepository");
 
 class CommentRepositoryPostgres extends CommentRepository {
-    constructor(pool, idGenerator) {
+    constructor(pool) {
         super();
         this._pool = pool;
-        this._idGenerator = idGenerator;
+    }
+
+    // Validasi UUID untuk commentId dan threadId
+    validateUUID(id) {
+        if (!uuidValidate(id)) {
+            throw new NotFoundError("ID tidak valid");
+        }
     }
 
     async checkCommentAvailability(commentId, threadId) {
+        this.validateUUID(commentId);  // Validasi UUID commentId
+        this.validateUUID(threadId);   // Validasi UUID threadId
+
         const query = {
             text: "SELECT id, is_delete, thread FROM comments WHERE id = $1",
             values: [commentId],
@@ -32,6 +42,8 @@ class CommentRepositoryPostgres extends CommentRepository {
     }
 
     async verifyCommentOwner(id, owner) {
+        this.validateUUID(id); // Validasi UUID commentId
+
         const query = {
             text: "SELECT owner FROM comments WHERE id = $1",
             values: [id],
@@ -40,18 +52,35 @@ class CommentRepositoryPostgres extends CommentRepository {
         const result = await this._pool.query(query);
         const comment = result.rows[0];
 
-        if (comment.owner !== owner) {
+        if (!comment || comment.owner !== owner) {
             throw new AuthorizationError("akses dilarang");
         }
     }
 
+    // Validasi threadId sebelum menambahkan komentar
     async addComment(userId, threadId, newComment) {
         const { content } = newComment;
-        const id = `comment-${this._idGenerator()}`;
+
+        // Validasi threadId menggunakan UUID
+        this.validateUUID(threadId); 
+
+        // Validasi keberadaan thread dengan threadId
+        const threadCheckQuery = {
+            text: "SELECT 1 FROM threads WHERE id = $1",
+            values: [threadId],
+        };
+
+        const threadResult = await this._pool.query(threadCheckQuery);
+
+        if (!threadResult.rowCount) {
+            throw new NotFoundError("Thread tidak ditemukan");
+        }
+
+        const id = uuidv4();
         const date = new Date().toISOString();
 
         const query = {
-            text: "INSERT INTO comments VALUES($1, $2, $3, $4, $5) RETURNING id, content, owner",
+            text: "INSERT INTO comments (id, content, date, thread, owner) VALUES($1, $2, $3, $4, $5) RETURNING id, content, owner",
             values: [id, content, date, threadId, userId],
         };
 
@@ -60,18 +89,40 @@ class CommentRepositoryPostgres extends CommentRepository {
         return new AddedComment(result.rows[0]);
     }
 
+    // Validasi threadId sebelum mengambil komentar berdasarkan threadId
     async getCommentsByThreadId(threadId) {
+        this.validateUUID(threadId); // Validasi threadId menggunakan UUID
+
+        // Validasi keberadaan thread dengan threadId
+        const threadCheckQuery = {
+            text: "SELECT 1 FROM threads WHERE id = $1",
+            values: [threadId],
+        };
+
+        const threadResult = await this._pool.query(threadCheckQuery);
+
+        if (!threadResult.rowCount) {
+            throw new NotFoundError("Thread tidak ditemukan");
+        }
+
         const query = {
-            text: "SELECT comments.id, users.username, comments.date, comments.content, comments.is_delete FROM comments LEFT JOIN users ON users.id = comments.owner WHERE comments.thread = $1 ORDER BY comments.date ASC",
+            text: `
+                SELECT comments.id, users.username, comments.date, comments.content, comments.is_delete 
+                FROM comments 
+                LEFT JOIN users ON users.id = comments.owner 
+                WHERE comments.thread = $1 
+                ORDER BY comments.date ASC
+            `,
             values: [threadId],
         };
 
         const result = await this._pool.query(query);
-
         return result.rows;
     }
 
     async deleteCommentById(id) {
+        this.validateUUID(id); // Validasi commentId menggunakan UUID
+
         const query = {
             text: "UPDATE comments SET is_delete = true WHERE id = $1",
             values: [id],

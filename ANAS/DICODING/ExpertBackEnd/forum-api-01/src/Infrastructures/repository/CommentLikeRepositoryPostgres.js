@@ -1,14 +1,14 @@
+const { v4: uuidv4 } = require("uuid");
 const CommentLikeRepository = require("../../Domains/likes/CommentLikeRepository");
 
 class CommentLikeRepositoryPostgres extends CommentLikeRepository {
-    constructor(pool, idGenerator) {
+    constructor(pool) {
         super();
         this._pool = pool;
-        this._idGenerator = idGenerator;
     }
 
     async addLike(like) {
-        const id = `like-${this._idGenerator()}`;
+        const id = uuidv4();
         const { commentId, owner } = like;
 
         const query = {
@@ -21,14 +21,16 @@ class CommentLikeRepositoryPostgres extends CommentLikeRepository {
 
     async getLikesByThreadId(threadId) {
         const query = {
-            text: `SELECT user_comment_likes.* FROM user_comment_likes 
-      LEFT JOIN comments ON comments.id = user_comment_likes.comment
-      WHERE comments.thread = $1`,
+            text: `
+                SELECT user_comment_likes.* 
+                FROM user_comment_likes 
+                LEFT JOIN comments ON comments.id = user_comment_likes.comment
+                WHERE comments.thread = $1
+            `,
             values: [threadId],
         };
 
         const result = await this._pool.query(query);
-
         return result.rows;
     }
 
@@ -52,7 +54,6 @@ class CommentLikeRepositoryPostgres extends CommentLikeRepository {
         };
 
         const result = await this._pool.query(query);
-
         return !!result.rowCount;
     }
 }

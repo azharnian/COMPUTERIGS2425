@@ -1,12 +1,12 @@
 const { createContainer } = require("instances-container");
 
-// external agency
+// external
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 const Jwt = require("@hapi/jwt");
 const pool = require("./database/postgres/pool");
 
-// service (repository, helper, manager, etc)
+// service
 const PasswordHash = require("../Applications/security/PasswordHash");
 const AuthenticationTokenManager = require("../Applications/security/AuthenticationTokenManager");
 const UserRepository = require("../Domains/users/UserRepository");
@@ -74,7 +74,7 @@ container.register([
                     concrete: pool,
                 },
                 {
-                    concrete: uuidv4, // Ganti nanoid dengan uuidv4
+                    concrete: uuidv4,
                 },
             ],
         },
@@ -99,7 +99,7 @@ container.register([
                     concrete: pool,
                 },
                 {
-                    concrete: uuidv4, // Ganti nanoid dengan uuidv4
+                    concrete: uuidv4,
                 },
             ],
         },
@@ -113,7 +113,7 @@ container.register([
                     concrete: pool,
                 },
                 {
-                    concrete: uuidv4, // Ganti nanoid dengan uuidv4
+                    concrete: uuidv4,
                 },
             ],
         },
@@ -127,7 +127,7 @@ container.register([
                     concrete: pool,
                 },
                 {
-                    concrete: uuidv4, // Ganti nanoid dengan uuidv4
+                    concrete: uuidv4,
                 },
             ],
         },
@@ -141,7 +141,7 @@ container.register([
                     concrete: pool,
                 },
                 {
-                    concrete: uuidv4, // Ganti nanoid dengan uuidv4
+                    concrete: uuidv4,
                 },
             ],
         },
