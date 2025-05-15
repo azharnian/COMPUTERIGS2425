@@ -8,6 +8,7 @@ import Main from "./components/Main";
 import BoxMovies from "./components/BoxMovies";
 import Loader from "./components/LoadingAnimation";
 import MovieList from "./components/MovieList";
+import MovieDetails from "./components/MovieDetails";
 
 function App() {
   const [query, setQuery] = useState("oppenheimer");
@@ -24,7 +25,6 @@ function App() {
           );
 
           const data = await res.json();
-          console.log(data.Search);
           setMovies(data.Search);
           setIsLoading(false);
         } catch (err) {
@@ -44,6 +44,10 @@ function App() {
     setSelectedMovieId((selectedId) => (selectedId === id ? null : id));
   }
 
+  function handleCloseMovie() {
+    setSelectedMovieId(null);
+  }
+
   return (
     <>
       <NavBar>
@@ -57,7 +61,13 @@ function App() {
               <MovieList movies={movies} onSelectMovieId={handleSelectMovieId} />}
         </BoxMovies>
         <BoxMovies>
-          
+            {selectedMovieId && (
+                <MovieDetails 
+                  selectedId={selectedMovieId}
+                  onCloseMovie={handleCloseMovie}
+                />
+              )
+            }
         </BoxMovies>
       </Main>
     </>
