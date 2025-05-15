@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 class ServerTestHelper {
     constructor(server) {
         this._server = server;

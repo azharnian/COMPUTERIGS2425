@@ -1,11 +1,11 @@
-/* istanbul ignore file */
+const { v4: uuidv4 } = require("uuid");
 const pool = require("../src/Infrastructures/database/postgres/pool");
 
 const CommentLikesTableTestHelper = {
     async addLike({
-        id = "like-123",
-        commentId = "comment-123",
-        owner = "user-123",
+        id = uuidv4(),  // murni UUID tanpa prefix
+        commentId = uuidv4(),
+        owner = uuidv4(),
     }) {
         const query = {
             text: "INSERT INTO user_comment_likes (id, comment, owner) VALUES ($1, $2, $3)",

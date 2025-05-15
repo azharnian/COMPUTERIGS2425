@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4, validate: uuidValidate, version: uuidVersion } = require("uuid");
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const ThreadRepository = require("../../Domains/threads/ThreadRepository");
 const AddedThread = require("../../Domains/threads/entities/AddedThread");
@@ -9,7 +9,16 @@ class ThreadRepositoryPostgres extends ThreadRepository {
         this._pool = pool;
     }
 
+    _validateThreadId(id) {
+        // ID harus UUID v4
+        if (!uuidValidate(id) || uuidVersion(id) !== 4) {
+            throw new NotFoundError("thread tidak ditemukan");
+        }
+    }
+
     async checkThreadAvailability(id) {
+        this._validateThreadId(id);
+
         const query = {
             text: "SELECT id FROM threads WHERE id = $1",
             values: [id],
@@ -38,6 +47,8 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     }
 
     async getThreadById(id) {
+        this._validateThreadId(id);
+
         const query = {
             text: `SELECT threads.id, threads.title, threads.body, threads.date::text, users.username
                    FROM threads

@@ -1,13 +1,13 @@
-/* istanbul ignore file */
+const { v4: uuidv4 } = require("uuid");
 const pool = require("../src/Infrastructures/database/postgres/pool");
 
 const RepliesTableTestHelper = {
     async addReply({
-        id = "reply-123",
+        id = uuidv4(),          // UUID murni untuk id
         content = "A new reply",
         date = new Date().toISOString(),
-        comment = "comment-123",
-        owner = "user-123",
+        comment = uuidv4(),     // UUID murni untuk comment id
+        owner = uuidv4(),       // UUID murni untuk owner id
         isDelete = false,
     }) {
         const query = {

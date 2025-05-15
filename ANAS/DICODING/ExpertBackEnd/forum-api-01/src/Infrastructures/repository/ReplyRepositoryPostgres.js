@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require("uuid");
+const { v4: uuidv4, validate: uuidValidate, version: uuidVersion } = require("uuid");
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const AuthorizationError = require("../../Commons/exceptions/AuthorizationError");
 const AddedReply = require("../../Domains/replies/entities/AddedReply");
@@ -10,7 +10,16 @@ class ReplyRepositoryPostgres extends ReplyRepository {
         this._pool = pool;
     }
 
+    _validateUuidV4OrThrow(id) {
+        if (!uuidValidate(id) || uuidVersion(id) !== 4) {
+            throw new NotFoundError("balasan tidak ditemukan");
+        }
+    }
+
     async checkReplyAvailability(replyId, commentId) {
+        this._validateUuidV4OrThrow(replyId);
+        this._validateUuidV4OrThrow(commentId);
+
         const query = {
             text: "SELECT id, is_delete, comment FROM replies WHERE id = $1",
             values: [replyId],
@@ -22,22 +31,27 @@ class ReplyRepositoryPostgres extends ReplyRepository {
             throw new NotFoundError("balasan tidak ditemukan");
         }
 
-        if (result.rows[0].is_delete) {
+        const reply = result.rows[0];
+
+        if (reply.is_delete) {
             throw new NotFoundError("balasan tidak valid");
         }
 
-        if (result.rows[0].comment !== commentId) {
+        if (reply.comment !== commentId) {
             throw new NotFoundError("balasan dalam komentar tidak ditemukan");
         }
     }
 
     async verifyReplyOwner(id, owner) {
+        this._validateUuidV4OrThrow(id);
+
         const query = {
             text: "SELECT owner FROM replies WHERE id = $1",
             values: [id],
         };
 
         const result = await this._pool.query(query);
+
         const reply = result.rows[0];
 
         if (!reply || reply.owner !== owner) {
@@ -61,6 +75,8 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     }
 
     async getRepliesByCommentId(commentId) {
+        this._validateUuidV4OrThrow(commentId);
+
         const query = {
             text: `
                 SELECT replies.id, users.username, replies.date, replies.content, replies.is_delete 
@@ -77,6 +93,8 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     }
 
     async getRepliesByThreadId(threadId) {
+        this._validateUuidV4OrThrow(threadId);
+
         const query = {
             text: `
                 SELECT replies.*, users.username 
@@ -94,6 +112,8 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     }
 
     async deleteReplyById(id) {
+        this._validateUuidV4OrThrow(id);
+
         const query = {
             text: "UPDATE replies SET is_delete = true WHERE id = $1",
             values: [id],

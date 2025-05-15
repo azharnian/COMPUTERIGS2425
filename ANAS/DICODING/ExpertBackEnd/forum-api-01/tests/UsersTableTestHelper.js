@@ -1,9 +1,12 @@
-/* istanbul ignore file */
+const { v4: uuidv4 } = require("uuid");
 const pool = require("../src/Infrastructures/database/postgres/pool");
 
 const UsersTableTestHelper = {
     async addUser({
-        id = "user-123", username = "dicoding", password = "secret", fullname = "Dicoding Indonesia",
+        id = uuidv4(),
+        username = "dicoding",
+        password = "secret",
+        fullname = "Dicoding Indonesia",
     }) {
         const query = {
             text: "INSERT INTO users VALUES($1, $2, $3, $4)",
