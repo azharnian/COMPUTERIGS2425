@@ -42,12 +42,12 @@ class ReplyRepositoryPostgres extends ReplyRepository {
         }
     }
 
-    async verifyReplyOwner(id, owner) {
-        this._validateUuidV4OrThrow(id);
+    async verifyReplyOwner(replyId, owner) {
+        this._validateUuidV4OrThrow(replyId);
 
         const query = {
             text: "SELECT owner FROM replies WHERE id = $1",
-            values: [id],
+            values: [replyId],
         };
 
         const result = await this._pool.query(query);
@@ -61,7 +61,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
 
     async addReply(userId, commentId, newReply) {
         const { content } = newReply;
-        const id = uuidv4();
+        const id = uuidv4(); // pure UUID v4
         const date = new Date().toISOString();
 
         const query = {
@@ -111,12 +111,12 @@ class ReplyRepositoryPostgres extends ReplyRepository {
         return result.rows;
     }
 
-    async deleteReplyById(id) {
-        this._validateUuidV4OrThrow(id);
+    async deleteReplyById(replyId) {
+        this._validateUuidV4OrThrow(replyId);
 
         const query = {
             text: "UPDATE replies SET is_delete = true WHERE id = $1",
-            values: [id],
+            values: [replyId],
         };
 
         await this._pool.query(query);

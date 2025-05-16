@@ -1,0 +1,21 @@
+nav {
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    gap: 50px;
+}
+
+nav > a {
+    width: 100px;
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+}
+
+nav > a:nth-child(2) {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    padding: 0px 20px;
+}

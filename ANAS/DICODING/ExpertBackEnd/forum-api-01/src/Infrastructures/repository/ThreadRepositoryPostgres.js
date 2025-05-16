@@ -10,7 +10,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     }
 
     _validateThreadId(id) {
-        // ID harus UUID v4
+        // Validasi id harus UUID v4 murni
         if (!uuidValidate(id) || uuidVersion(id) !== 4) {
             throw new NotFoundError("thread tidak ditemukan");
         }
@@ -33,7 +33,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
 
     async addThread(userId, newThread) {
         const { title, body } = newThread;
-        const id = uuidv4();
+        const id = uuidv4(); // Generate pure UUID v4 tanpa prefix/suffix
         const date = new Date().toISOString();
 
         const query = {
@@ -50,10 +50,12 @@ class ThreadRepositoryPostgres extends ThreadRepository {
         this._validateThreadId(id);
 
         const query = {
-            text: `SELECT threads.id, threads.title, threads.body, threads.date::text, users.username
-                   FROM threads
-                   LEFT JOIN users ON users.id = threads.owner
-                   WHERE threads.id = $1`,
+            text: `
+                SELECT threads.id, threads.title, threads.body, threads.date::text, users.username
+                FROM threads
+                LEFT JOIN users ON users.id = threads.owner
+                WHERE threads.id = $1
+            `,
             values: [id],
         };
 

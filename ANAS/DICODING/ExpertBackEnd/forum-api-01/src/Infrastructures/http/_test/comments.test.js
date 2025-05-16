@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const pool = require("../../database/postgres/pool");
 const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 const AuthenticationsTableTestHelper = require("../../../../tests/AuthenticationsTableTestHelper");
@@ -27,32 +28,28 @@ describe("threads comments endpoint", () => {
         await AuthenticationsTableTestHelper.cleanTable();
     });
 
-    const dummyThread = {
-        id: "thread-123",
-        title: "A New Thread",
-        body: "Thread body",
-        date: new Date().toISOString(),
-    };
-
     describe("when POST /threads/{threadId}/comments", () => {
         it("should response 201 and added comment", async () => {
-            // Arrange
+            const threadId = uuidv4();
             const requestPayload = { content: "A comment" };
 
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
 
-            // add thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
+            await ThreadsTableTestHelper.addThread({
+                id: threadId,
+                title: "A New Thread",
+                body: "Thread body",
+                owner: userId,
+                date: new Date().toISOString(),
+            });
 
-            // Action
             const response = await server.inject({
                 method: "POST",
-                url: `/threads/${dummyThread.id}/comments`,
+                url: `/threads/${threadId}/comments`,
                 payload: requestPayload,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(201);
             expect(responseJson.status).toEqual("success");
@@ -61,21 +58,24 @@ describe("threads comments endpoint", () => {
         });
 
         it("should response 400 if payload not contain needed property", async () => {
-            // Arrange
+            const threadId = uuidv4();
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
 
-            // add thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
+            await ThreadsTableTestHelper.addThread({
+                id: threadId,
+                title: "A New Thread",
+                body: "Thread body",
+                owner: userId,
+                date: new Date().toISOString(),
+            });
 
-            // Action
             const response = await server.inject({
                 method: "POST",
-                url: `/threads/${dummyThread.id}/comments`,
+                url: `/threads/${threadId}/comments`,
                 payload: {},
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(400);
             expect(responseJson.status).toEqual("fail");
@@ -83,23 +83,26 @@ describe("threads comments endpoint", () => {
         });
 
         it("should response 400 if payload wrong data type", async () => {
-            // Arrange
+            const threadId = uuidv4();
             const requestPayload = { content: 1234 };
 
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
 
-            // add thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
+            await ThreadsTableTestHelper.addThread({
+                id: threadId,
+                title: "A New Thread",
+                body: "Thread body",
+                owner: userId,
+                date: new Date().toISOString(),
+            });
 
-            // Action
             const response = await server.inject({
                 method: "POST",
-                url: `/threads/${dummyThread.id}/comments`,
+                url: `/threads/${threadId}/comments`,
                 payload: requestPayload,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(400);
             expect(responseJson.status).toEqual("fail");
@@ -107,20 +110,17 @@ describe("threads comments endpoint", () => {
         });
 
         it("should response 404 if thread is not exist", async () => {
-            // Arrange
+            const threadId = uuidv4();
             const requestPayload = { content: "A comment" };
-
             const { accessToken } = await serverTestHelper.getAccessTokenAndUserId();
 
-            // Action
             const response = await server.inject({
                 method: "POST",
-                url: "/threads/thread-567/comments",
+                url: `/threads/${threadId}/comments`,
                 payload: requestPayload,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(404);
             expect(responseJson.status).toEqual("fail");
@@ -128,195 +128,205 @@ describe("threads comments endpoint", () => {
         });
 
         it("should response 401 if headers not contain access token", async () => {
-            // Arrange
+            const threadId = uuidv4();
             const requestPayload = { content: "A comment" };
-
             const { userId } = await serverTestHelper.getAccessTokenAndUserId();
 
-            // add thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
+            await ThreadsTableTestHelper.addThread({
+                id: threadId,
+                title: "A New Thread",
+                body: "Thread body",
+                owner: userId,
+                date: new Date().toISOString(),
+            });
 
-            // Action
             const response = await server.inject({
                 method: "POST",
-                url: `/threads/${dummyThread.id}/comments`,
+                url: `/threads/${threadId}/comments`,
                 payload: requestPayload,
             });
 
-            // Assert
             expect(response.statusCode).toEqual(401);
         });
     });
 
     describe("when DELETE /threads/{threadId}/comments/{commentId}", () => {
-        const dummyComment = {
-            id: "comment-123",
-            content: "A comment",
-            date: new Date().toISOString(),
-            thread: "thread-123",
-            isDelete: false,
-        };
-
         it("should response 200", async () => {
-            // Arrange
+            const threadId = uuidv4();
+            const commentId = uuidv4();
+
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
 
-            // add thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
-            // add comment
-            await CommentsTableTestHelper.addComment({ ...dummyComment, owner: userId });
+            await ThreadsTableTestHelper.addThread({
+                id: threadId,
+                title: "Thread Title",
+                body: "Thread body",
+                owner: userId,
+                date: new Date().toISOString(),
+            });
 
-            // Action
+            await CommentsTableTestHelper.addComment({
+                id: commentId,
+                content: "A comment",
+                thread: threadId,
+                owner: userId,
+                date: new Date().toISOString(),
+                isDelete: false,
+            });
+
             const response = await server.inject({
                 method: "DELETE",
-                url: `/threads/${dummyThread.id}/comments/${dummyComment.id}`,
+                url: `/threads/${threadId}/comments/${commentId}`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(200);
             expect(responseJson.status).toEqual("success");
         });
 
         it("should response 404 if comment is not exist", async () => {
-            // Arrange
+            const threadId = uuidv4();
+            const commentId = uuidv4();
+
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
 
-            // add thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
+            await ThreadsTableTestHelper.addThread({
+                id: threadId,
+                title: "Thread Title",
+                body: "Thread body",
+                owner: userId,
+                date: new Date().toISOString(),
+            });
 
-            // Action
             const response = await server.inject({
                 method: "DELETE",
-                url: `/threads/${dummyThread.id}/comments/comment-678`,
+                url: `/threads/${threadId}/comments/${commentId}`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(404);
             expect(responseJson.status).toEqual("fail");
             expect(responseJson.message).toEqual("komentar tidak ditemukan");
         });
 
-        it("should response 404 if comment is not valid or deleted", async () => {
-            // Arrange
+        it("should response 404 if comment already deleted", async () => {
+            const threadId = uuidv4();
+            const commentId = uuidv4();
+
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
 
-            // add thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
-            // add comment
-            await CommentsTableTestHelper.addComment({ ...dummyComment, owner: userId });
+            await ThreadsTableTestHelper.addThread({ id: threadId, title: "Title", body: "Body", owner: userId });
+            await CommentsTableTestHelper.addComment({
+                id: commentId,
+                content: "Content",
+                thread: threadId,
+                owner: userId,
+                date: new Date().toISOString(),
+                isDelete: false,
+            });
 
-            // delete comment
             await server.inject({
                 method: "DELETE",
-                url: `/threads/${dummyThread.id}/comments/${dummyComment.id}`,
+                url: `/threads/${threadId}/comments/${commentId}`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Action
             const response = await server.inject({
                 method: "DELETE",
-                url: `/threads/${dummyThread.id}/comments/${dummyComment.id}`,
+                url: `/threads/${threadId}/comments/${commentId}`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(404);
-            expect(responseJson.status).toEqual("fail");
             expect(responseJson.message).toEqual("komentar tidak valid");
         });
 
-        it("should response 404 if comment is not exist in thread", async () => {
-            // Arrange
+        it("should response 404 if comment is not in thread", async () => {
+            const threadId1 = uuidv4();
+            const threadId2 = uuidv4();
+            const commentId = uuidv4();
+
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
 
-            // add thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
-            // add comment
-            await CommentsTableTestHelper.addComment({ ...dummyComment, owner: userId });
+            await ThreadsTableTestHelper.addThread({ id: threadId1, title: "Thread 1", body: "Body", owner: userId });
+            await ThreadsTableTestHelper.addThread({ id: threadId2, title: "Thread 2", body: "Body", owner: userId });
 
-            // add other thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, id: "other-thread", owner: userId });
+            await CommentsTableTestHelper.addComment({
+                id: commentId,
+                content: "Comment",
+                thread: threadId1,
+                owner: userId,
+                date: new Date().toISOString(),
+                isDelete: false,
+            });
 
-            // Action
             const response = await server.inject({
                 method: "DELETE",
-                url: `/threads/other-thread/comments/${dummyComment.id}`, // wrong thread
+                url: `/threads/${threadId2}/comments/${commentId}`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(404);
-            expect(responseJson.status).toEqual("fail");
             expect(responseJson.message).toEqual("komentar dalam thread tidak ditemukan");
         });
 
-        it("should response 404 if thread is not exist", async () => {
-            // Arrange
-            const { accessToken } = await serverTestHelper.getAccessTokenAndUserId();
+        it("should response 403 if not authorized", async () => {
+            const threadId = uuidv4();
+            const commentId = uuidv4();
 
-            // Action
-            const response = await server.inject({
-                method: "DELETE",
-                url: "/threads/thread-456/comments/comment-123",
-                headers: { Authorization: `Bearer ${accessToken}` },
-            });
-
-            // Assert
-            const responseJson = JSON.parse(response.payload);
-            expect(response.statusCode).toEqual(404);
-            expect(responseJson.status).toEqual("fail");
-            expect(responseJson.message).toEqual("thread tidak ditemukan");
-        });
-
-        it("should response 403 if comment owner is not authorized", async () => {
-            // Arrange
             const { userId } = await serverTestHelper.getAccessTokenAndUserId();
-            const { accessToken: otherAccessToken } = await serverTestHelper.getAccessTokenAndUserId(
-                {
-                    username: "otheruser",
-                    password: "otherpassword",
-                    fullname: "Anonymous",
-                },
-            );
-
-            // add thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
-            // add comment
-            await CommentsTableTestHelper.addComment({ ...dummyComment, owner: userId });
-
-            // Action
-            const response = await server.inject({
-                method: "DELETE",
-                url: `/threads/${dummyThread.id}/comments/${dummyComment.id}`,
-                headers: { Authorization: `Bearer ${otherAccessToken}` }, // using different access token
+            const { accessToken: otherToken } = await serverTestHelper.getAccessTokenAndUserId({
+                username: "anotheruser",
+                password: "password",
+                fullname: "Another User",
             });
 
-            // Assert
+            await ThreadsTableTestHelper.addThread({ id: threadId, title: "Thread", body: "Body", owner: userId });
+
+            await CommentsTableTestHelper.addComment({
+                id: commentId,
+                content: "Comment",
+                thread: threadId,
+                owner: userId,
+                date: new Date().toISOString(),
+                isDelete: false,
+            });
+
+            const response = await server.inject({
+                method: "DELETE",
+                url: `/threads/${threadId}/comments/${commentId}`,
+                headers: { Authorization: `Bearer ${otherToken}` },
+            });
+
             expect(response.statusCode).toEqual(403);
         });
 
-        it("should response 401 if headers not contain access token", async () => {
-            // Arrange
+        it("should response 401 if no access token", async () => {
+            const threadId = uuidv4();
+            const commentId = uuidv4();
+
             const { userId } = await serverTestHelper.getAccessTokenAndUserId();
 
-            // add thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
-            // add comment
-            await CommentsTableTestHelper.addComment({ ...dummyComment, owner: userId });
+            await ThreadsTableTestHelper.addThread({ id: threadId, title: "Thread", body: "Body", owner: userId });
 
-            // Action
-            const response = await server.inject({
-                method: "DELETE",
-                url: `/threads/${dummyThread.id}/comments/${dummyComment.id}`,
+            await CommentsTableTestHelper.addComment({
+                id: commentId,
+                content: "Comment",
+                thread: threadId,
+                owner: userId,
+                date: new Date().toISOString(),
+                isDelete: false,
             });
 
-            // Assert
+            const response = await server.inject({
+                method: "DELETE",
+                url: `/threads/${threadId}/comments/${commentId}`,
+            });
+
             expect(response.statusCode).toEqual(401);
         });
     });

@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const pool = require("../../database/postgres/pool");
 const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 const AuthenticationsTableTestHelper = require("../../../../tests/AuthenticationsTableTestHelper");
@@ -30,14 +31,14 @@ describe("comment likes endpoint", () => {
     });
 
     const dummyThread = {
-        id: "thread-123",
+        id: uuidv4(),
         title: "A New Thread",
         body: "Thread body",
         date: new Date().toISOString(),
     };
 
     const dummyComment = {
-        id: "comment-123",
+        id: uuidv4(),
         content: "A comment",
         date: new Date().toISOString(),
         thread: dummyThread.id,
@@ -46,23 +47,16 @@ describe("comment likes endpoint", () => {
 
     describe("when PUT /threads/{threadId}/comments/{commentId}/likes", () => {
         it("should response 200 and like comment if comment is not liked", async () => {
-            // Arrange
-            // user login
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
-
-            // add thread
             await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
-            // add comment
             await CommentsTableTestHelper.addComment({ ...dummyComment, owner: userId });
 
-            // Action
             const response = await server.inject({
                 method: "PUT",
                 url: `/threads/${dummyThread.id}/comments/${dummyComment.id}/likes`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(200);
             expect(responseJson.status).toEqual("success");
@@ -75,25 +69,17 @@ describe("comment likes endpoint", () => {
         });
 
         it("should response 200 and unlike comment if comment is liked", async () => {
-            // Arrange
-            // user login
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
-
-            // add thread
             await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
-            // add comment
             await CommentsTableTestHelper.addComment({ ...dummyComment, owner: userId });
-            // add like
             await CommentLikesTableTestHelper.addLike({ commentId: dummyComment.id, owner: userId });
 
-            // Action
             const response = await server.inject({
                 method: "PUT",
                 url: `/threads/${dummyThread.id}/comments/${dummyComment.id}/likes`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(200);
             expect(responseJson.status).toEqual("success");
@@ -106,25 +92,19 @@ describe("comment likes endpoint", () => {
         });
 
         it("should response 404 if liked comment is not exist in thread", async () => {
-            // Arrange
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
-
-            // add thread
             await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
-            // add comment
             await CommentsTableTestHelper.addComment({ ...dummyComment, owner: userId });
 
-            // add other thread
-            await ThreadsTableTestHelper.addThread({ ...dummyThread, id: "other-thread", owner: userId });
+            const otherThreadId = uuidv4();
+            await ThreadsTableTestHelper.addThread({ ...dummyThread, id: otherThreadId, owner: userId });
 
-            // Action
             const response = await server.inject({
                 method: "PUT",
-                url: `/threads/other-thread/comments/${dummyComment.id}/likes`, // wrong thread
+                url: `/threads/${otherThreadId}/comments/${dummyComment.id}/likes`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(404);
             expect(responseJson.status).toEqual("fail");
@@ -132,21 +112,16 @@ describe("comment likes endpoint", () => {
         });
 
         it("should response 404 if comment is not exist", async () => {
-            // Arrange
-            // user login
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
-
-            // add thread
             await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
 
-            // Action
+            const nonExistentCommentId = uuidv4();
             const response = await server.inject({
                 method: "PUT",
-                url: `/threads/${dummyThread.id}/comments/comment-789/likes`,
+                url: `/threads/${dummyThread.id}/comments/${nonExistentCommentId}/likes`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(404);
             expect(responseJson.status).toEqual("fail");
@@ -154,30 +129,22 @@ describe("comment likes endpoint", () => {
         });
 
         it("should response 404 if comment is not valid or deleted", async () => {
-            // Arrange
-            // user login
             const { accessToken, userId } = await serverTestHelper.getAccessTokenAndUserId();
-
-            // add thread
             await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
-            // add comment
             await CommentsTableTestHelper.addComment({ ...dummyComment, owner: userId });
 
-            // delete comment
             await server.inject({
                 method: "DELETE",
                 url: `/threads/${dummyThread.id}/comments/${dummyComment.id}`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Action
             const response = await server.inject({
                 method: "PUT",
                 url: `/threads/${dummyThread.id}/comments/${dummyComment.id}/likes`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(404);
             expect(responseJson.status).toEqual("fail");
@@ -185,17 +152,16 @@ describe("comment likes endpoint", () => {
         });
 
         it("should response 404 if thread is not exist", async () => {
-            // Arrange
             const { accessToken } = await serverTestHelper.getAccessTokenAndUserId();
+            const fakeThreadId = uuidv4();
+            const fakeCommentId = uuidv4();
 
-            // Action
             const response = await server.inject({
                 method: "PUT",
-                url: "/threads/thread-345/comments/comment-321/likes",
+                url: `/threads/${fakeThreadId}/comments/${fakeCommentId}/likes`,
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
-            // Assert
             const responseJson = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(404);
             expect(responseJson.status).toEqual("fail");
@@ -203,21 +169,15 @@ describe("comment likes endpoint", () => {
         });
 
         it("should response 401 if headers not contain access token", async () => {
-            // Arrange
             const { userId } = await serverTestHelper.getAccessTokenAndUserId();
-
-            // add thread
             await ThreadsTableTestHelper.addThread({ ...dummyThread, owner: userId });
-            // add comment
             await CommentsTableTestHelper.addComment({ ...dummyComment, owner: userId });
 
-            // Action
             const response = await server.inject({
                 method: "PUT",
                 url: `/threads/${dummyThread.id}/comments/${dummyComment.id}/likes`,
             });
 
-            // Assert
             expect(response.statusCode).toEqual(401);
         });
     });

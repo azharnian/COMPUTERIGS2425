@@ -5,21 +5,26 @@ const AddedComment = require("../../Domains/comments/entities/AddedComment");
 const CommentRepository = require("../../Domains/comments/CommentRepository");
 
 class CommentRepositoryPostgres extends CommentRepository {
-    constructor(pool) {
+    /**
+     * 
+     * @param {Pool} pool - koneksi pool ke database Postgres
+     * @param {Function} idGenerator - fungsi untuk generate ID (default: uuidv4)
+     */
+    constructor(pool, idGenerator = uuidv4) {
         super();
         this._pool = pool;
+        this._idGenerator = idGenerator;
     }
 
-    // Validasi UUID untuk commentId dan threadId
-    validateUUID(id) {
+    _validateUUIDOrThrow(id) {
         if (!uuidValidate(id)) {
             throw new NotFoundError("ID tidak valid");
         }
     }
 
     async checkCommentAvailability(commentId, threadId) {
-        this.validateUUID(commentId);  // Validasi UUID commentId
-        this.validateUUID(threadId);   // Validasi UUID threadId
+        this._validateUUIDOrThrow(commentId);
+        this._validateUUIDOrThrow(threadId);
 
         const query = {
             text: "SELECT id, is_delete, thread FROM comments WHERE id = $1",
@@ -32,17 +37,19 @@ class CommentRepositoryPostgres extends CommentRepository {
             throw new NotFoundError("komentar tidak ditemukan");
         }
 
-        if (result.rows[0].is_delete) {
+        const comment = result.rows[0];
+
+        if (comment.is_delete) {
             throw new NotFoundError("komentar tidak valid");
         }
 
-        if (result.rows[0].thread !== threadId) {
+        if (comment.thread !== threadId) {
             throw new NotFoundError("komentar dalam thread tidak ditemukan");
         }
     }
 
     async verifyCommentOwner(id, owner) {
-        this.validateUUID(id); // Validasi UUID commentId
+        this._validateUUIDOrThrow(id);
 
         const query = {
             text: "SELECT owner FROM comments WHERE id = $1",
@@ -50,6 +57,7 @@ class CommentRepositoryPostgres extends CommentRepository {
         };
 
         const result = await this._pool.query(query);
+
         const comment = result.rows[0];
 
         if (!comment || comment.owner !== owner) {
@@ -57,14 +65,12 @@ class CommentRepositoryPostgres extends CommentRepository {
         }
     }
 
-    // Validasi threadId sebelum menambahkan komentar
     async addComment(userId, threadId, newComment) {
         const { content } = newComment;
 
-        // Validasi threadId menggunakan UUID
-        this.validateUUID(threadId); 
+        this._validateUUIDOrThrow(threadId);
 
-        // Validasi keberadaan thread dengan threadId
+        // Pastikan thread ada
         const threadCheckQuery = {
             text: "SELECT 1 FROM threads WHERE id = $1",
             values: [threadId],
@@ -76,7 +82,7 @@ class CommentRepositoryPostgres extends CommentRepository {
             throw new NotFoundError("Thread tidak ditemukan");
         }
 
-        const id = uuidv4();
+        const id = this._idGenerator(); // pakai idGenerator yang diterima di constructor
         const date = new Date().toISOString();
 
         const query = {
@@ -89,11 +95,10 @@ class CommentRepositoryPostgres extends CommentRepository {
         return new AddedComment(result.rows[0]);
     }
 
-    // Validasi threadId sebelum mengambil komentar berdasarkan threadId
     async getCommentsByThreadId(threadId) {
-        this.validateUUID(threadId); // Validasi threadId menggunakan UUID
+        this._validateUUIDOrThrow(threadId);
 
-        // Validasi keberadaan thread dengan threadId
+        // Validasi keberadaan thread
         const threadCheckQuery = {
             text: "SELECT 1 FROM threads WHERE id = $1",
             values: [threadId],
@@ -121,7 +126,7 @@ class CommentRepositoryPostgres extends CommentRepository {
     }
 
     async deleteCommentById(id) {
-        this.validateUUID(id); // Validasi commentId menggunakan UUID
+        this._validateUUIDOrThrow(id);
 
         const query = {
             text: "UPDATE comments SET is_delete = true WHERE id = $1",
