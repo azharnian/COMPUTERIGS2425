@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object in Javascript</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        div.box {
+            position: relative;
+            width: 800px;
+            height: 800px;
+            margin: 0 auto;
+            background-color: grey;
+        }
+
+        .cat {
+            display: block;
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="box" id="arena"></div>
+    <script type="module">
+        import { cat } from "./scripts/cat.js";
+        import {checkKeyDown} from "./scripts/keyEvent.js";
+
+        cat.show();
+
+        checkKeyDown();
+    </script>
+</body>
+</html>

@@ -3,11 +3,11 @@ const pool = require("../src/Infrastructures/database/postgres/pool");
 
 const RepliesTableTestHelper = {
     async addReply({
-        id = uuidv4(),          // UUID murni untuk id
+        id = uuidv4(), 
         content = "A new reply",
         date = new Date().toISOString(),
-        comment = uuidv4(),     // UUID murni untuk comment id
-        owner = uuidv4(),       // UUID murni untuk owner id
+        comment = uuidv4(),  
+        owner = uuidv4(),
         isDelete = false,
     }) {
         const query = {
