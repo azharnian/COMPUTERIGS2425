@@ -15,20 +15,17 @@ class AddedReply {
     _verifyPayload(payload) {
         const { id, content, owner } = payload;
 
-        if (!id || !content || !owner) {
+        if (!content || !owner) {
             throw new Error("ADDED_REPLY.NOT_CONTAIN_NEEDED_PROPERTY");
         }
 
         if (
-            typeof id !== "string" 
-            || typeof content !== "string" 
-            || typeof owner !== "string"
+            typeof content !== "string" 
         ) {
             throw new Error("ADDED_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION");
         }
 
-        // Pastikan id yang diberikan adalah UUID yang valid
-        if (id && !uuidValidate(id)) {
+        if (id && !uuidValidate(id) && !uuidValidate(owner)) {
             throw new Error("ADDED_REPLY.ID_NOT_VALID_UUID_V4");
         }
     }

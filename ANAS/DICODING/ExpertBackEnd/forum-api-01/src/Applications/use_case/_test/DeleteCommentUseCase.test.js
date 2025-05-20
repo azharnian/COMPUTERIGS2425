@@ -1,13 +1,18 @@
+const { v4: uuidv4 } = require("uuid");
 const DeleteCommentUseCase = require("../DeleteCommentUseCase");
 const CommentRepository = require("../../../Domains/comments/CommentRepository");
 const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
 
 describe("DeleteCommentUseCase", () => {
     it("should orchestrating the delete comment action correctly", async () => {
-    // Arrange
+        // Arrange
+        const threadId = uuidv4();
+        const commentId = uuidv4();
+        const userId = uuidv4();
+
         const useCaseParams = {
-            threadId: "thread-123",
-            commentId: "comment-123",
+            threadId,
+            commentId,
         };
 
         /** creating dependency of use case */
@@ -27,22 +32,12 @@ describe("DeleteCommentUseCase", () => {
         });
 
         // Action
-        await deleteCommentUseCase.execute("user-123", useCaseParams);
+        await deleteCommentUseCase.execute(userId, useCaseParams);
 
         // Assert
-        expect(mockThreadRepository.checkThreadAvailability).toHaveBeenCalledWith(
-            useCaseParams.threadId,
-        );
-        expect(mockCommentRepository.checkCommentAvailability).toHaveBeenCalledWith(
-            useCaseParams.commentId,
-            useCaseParams.threadId,
-        );
-        expect(mockCommentRepository.verifyCommentOwner).toHaveBeenCalledWith(
-            useCaseParams.commentId,
-            "user-123",
-        );
-        expect(mockCommentRepository.deleteCommentById).toHaveBeenCalledWith(
-            useCaseParams.commentId,
-        );
+        expect(mockThreadRepository.checkThreadAvailability).toHaveBeenCalledWith(threadId);
+        expect(mockCommentRepository.checkCommentAvailability).toHaveBeenCalledWith(commentId, threadId);
+        expect(mockCommentRepository.verifyCommentOwner).toHaveBeenCalledWith(commentId, userId);
+        expect(mockCommentRepository.deleteCommentById).toHaveBeenCalledWith(commentId);
     });
 });

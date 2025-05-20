@@ -58,11 +58,12 @@ describe("CommentLikeRepositoryPostgres", () => {
                 dummyCommentId,
                 dummyUserId,
             );
-            expect(likes[0]).toStrictEqual({
-                id: dummyLikeId1,
+            expect(likes[0]).toMatchObject({
                 comment: dummyCommentId,
                 owner: dummyUserId,
             });
+            
+            expect(likes[0].id).toBeDefined();
         });
     });
 

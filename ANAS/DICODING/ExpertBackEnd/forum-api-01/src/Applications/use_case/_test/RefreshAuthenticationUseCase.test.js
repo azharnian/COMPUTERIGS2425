@@ -1,10 +1,11 @@
+const { v4: uuidv4 } = require("uuid");
 const AuthenticationRepository = require("../../../Domains/authentications/AuthenticationRepository");
 const AuthenticationTokenManager = require("../../security/AuthenticationTokenManager");
 const RefreshAuthenticationUseCase = require("../RefreshAuthenticationUseCase");
 
 describe("RefreshAuthenticationUseCase", () => {
     it("should throw error if use case payload not contain refresh token", async () => {
-    // Arrange
+        // Arrange
         const useCasePayload = {};
         const refreshAuthenticationUseCase = new RefreshAuthenticationUseCase({});
 
@@ -15,7 +16,7 @@ describe("RefreshAuthenticationUseCase", () => {
     });
 
     it("should throw error if refresh token not string", async () => {
-    // Arrange
+        // Arrange
         const useCasePayload = {
             refreshToken: 1,
         };
@@ -27,11 +28,14 @@ describe("RefreshAuthenticationUseCase", () => {
             .toThrowError("REFRESH_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION");
     });
 
-    it("should orchestrating the refresh authentication action correctly", async () => {
-    // Arrange
+    it("should orchestrate the refresh authentication action correctly", async () => {
+        // Arrange
         const useCasePayload = {
             refreshToken: "some_refresh_token",
         };
+
+        const userId = uuidv4();
+
         const mockAuthenticationRepository = new AuthenticationRepository();
         const mockAuthenticationTokenManager = new AuthenticationTokenManager();
 
@@ -40,11 +44,11 @@ describe("RefreshAuthenticationUseCase", () => {
         mockAuthenticationTokenManager.verifyRefreshToken = jest.fn(() => Promise.resolve());
         mockAuthenticationTokenManager.decodePayload = jest.fn(() => Promise.resolve({
             username: "dicoding",
-            id: "user-123",
+            id: userId,
         }));
         mockAuthenticationTokenManager.createAccessToken = jest.fn(() => Promise.resolve("some_new_access_token"));
 
-        // Create the use case instace
+        // Create the use case instance
         const refreshAuthenticationUseCase = new RefreshAuthenticationUseCase({
             authenticationRepository: mockAuthenticationRepository,
             authenticationTokenManager: mockAuthenticationTokenManager,
@@ -61,7 +65,7 @@ describe("RefreshAuthenticationUseCase", () => {
         expect(mockAuthenticationTokenManager.decodePayload)
             .toBeCalledWith(useCasePayload.refreshToken);
         expect(mockAuthenticationTokenManager.createAccessToken)
-            .toBeCalledWith({ username: "dicoding", id: "user-123" });
+            .toBeCalledWith({ username: "dicoding", id: userId });
         expect(accessToken).toEqual("some_new_access_token");
     });
 });

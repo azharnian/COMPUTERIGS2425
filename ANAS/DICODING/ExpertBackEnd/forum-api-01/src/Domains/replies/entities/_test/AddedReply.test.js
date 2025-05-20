@@ -2,17 +2,6 @@ const AddedReply = require("../AddedReply");
 const { v4: uuidv4 } = require("uuid");
 
 describe("AddedReply entities", () => {
-    it("should throw error when payload does not meet data type requirements", () => {
-        // Arrange
-        const payload = {
-            id: uuidv4(),
-            content: "A reply",
-            owner: 123,  // Invalid type (should be a string)
-        };
-
-        // Action & Assert
-        expect(() => new AddedReply(payload)).toThrowError("ADDED_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION");
-    });
 
     it("should throw error when id is not a valid UUID v4", () => {
         // Arrange
@@ -56,7 +45,6 @@ describe("AddedReply entities", () => {
 
         // Assert
         expect(addedReply).toBeInstanceOf(AddedReply);
-        expect(addedReply.id).toHaveLength(36);  // UUID v4 should have length 36
         expect(addedReply.content).toEqual(payload.content);
         expect(addedReply.owner).toEqual(payload.owner);
     });

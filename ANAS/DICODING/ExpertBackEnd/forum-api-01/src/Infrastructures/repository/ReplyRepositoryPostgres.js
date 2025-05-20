@@ -1,4 +1,4 @@
-const { v4: uuidv4, validate: uuidValidate, version: uuidVersion } = require("uuid");
+const { v4: uuidv4} = require("uuid");
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const AuthorizationError = require("../../Commons/exceptions/AuthorizationError");
 const AddedReply = require("../../Domains/replies/entities/AddedReply");
@@ -10,40 +10,35 @@ class ReplyRepositoryPostgres extends ReplyRepository {
         this._pool = pool;
     }
 
-    _validateUuidV4OrThrow(id) {
-        if (!uuidValidate(id) || uuidVersion(id) !== 4) {
-            throw new NotFoundError("balasan tidak ditemukan");
-        }
-    }
-
     async checkReplyAvailability(replyId, commentId) {
-        this._validateUuidV4OrThrow(replyId);
-        this._validateUuidV4OrThrow(commentId);
-
         const query = {
-            text: "SELECT id, is_delete, comment FROM replies WHERE id = $1",
+            text: "SELECT id, is_delete, comment FROM replies WHERE id = $1::uuid",
             values: [replyId],
         };
 
-        const result = await this._pool.query(query);
+        try {
+            const result = await this._pool.query(query);
 
-        if (!result.rowCount) {
+            if (!result.rowCount) {
+                throw new NotFoundError("balasan tidak ditemukan");
+            }
+
+            const reply = result.rows[0];
+
+            if (reply.is_delete) {
+                throw new NotFoundError("balasan tidak valid");
+            }
+
+            if (reply.comment !== commentId) {
+                throw new NotFoundError("balasan dalam komentar tidak ditemukan");
+            }
+        } catch (error) {
+        
             throw new NotFoundError("balasan tidak ditemukan");
-        }
-
-        const reply = result.rows[0];
-
-        if (reply.is_delete) {
-            throw new NotFoundError("balasan tidak valid");
-        }
-
-        if (reply.comment !== commentId) {
-            throw new NotFoundError("balasan dalam komentar tidak ditemukan");
         }
     }
 
     async verifyReplyOwner(replyId, owner) {
-        this._validateUuidV4OrThrow(replyId);
 
         const query = {
             text: "SELECT owner FROM replies WHERE id = $1",
@@ -61,7 +56,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
 
     async addReply(userId, commentId, newReply) {
         const { content } = newReply;
-        const id = uuidv4(); // pure UUID v4
+        const id = uuidv4();
         const date = new Date().toISOString();
 
         const query = {
@@ -75,14 +70,12 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     }
 
     async getRepliesByCommentId(commentId) {
-        this._validateUuidV4OrThrow(commentId);
-
         const query = {
             text: `
                 SELECT replies.id, users.username, replies.date, replies.content, replies.is_delete 
                 FROM replies 
                 LEFT JOIN users ON users.id = replies.owner 
-                WHERE replies.comment = $1 
+                WHERE replies.comment = $1::uuid
                 ORDER BY replies.date ASC
             `,
             values: [commentId],
@@ -93,15 +86,13 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     }
 
     async getRepliesByThreadId(threadId) {
-        this._validateUuidV4OrThrow(threadId);
-
         const query = {
             text: `
                 SELECT replies.*, users.username 
                 FROM replies
                 LEFT JOIN users ON users.id = replies.owner
                 LEFT JOIN comments ON comments.id = replies.comment
-                WHERE comments.thread = $1 AND comments.is_delete = false
+                WHERE comments.thread = $1::uuid AND comments.is_delete = false
                 ORDER BY replies.date ASC
             `,
             values: [threadId],
@@ -112,10 +103,8 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     }
 
     async deleteReplyById(replyId) {
-        this._validateUuidV4OrThrow(replyId);
-
         const query = {
-            text: "UPDATE replies SET is_delete = true WHERE id = $1",
+            text: "UPDATE replies SET is_delete = true WHERE id = $1::uuid",
             values: [replyId],
         };
 

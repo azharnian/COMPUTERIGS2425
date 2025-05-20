@@ -7,8 +7,9 @@ const ThreadsTableTestHelper = {
         title = "A New Thread",
         body = "Thread body",
         date = new Date().toISOString(),
-        owner = uuidv4(),
+        owner,
     }) {
+        if (!owner) throw new Error("Missing required 'owner' when adding thread");
         const query = {
             text: "INSERT INTO threads VALUES($1, $2, $3, $4, $5)",
             values: [id, title, body, date, owner],

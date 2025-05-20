@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const RegisterUser = require("../../../Domains/users/entities/RegisterUser");
 const RegisteredUser = require("../../../Domains/users/entities/RegisteredUser");
 const UserRepository = require("../../../Domains/users/UserRepository");
@@ -6,10 +7,11 @@ const AddUserUseCase = require("../AddUserUseCase");
 
 describe("AddUserUseCase", () => {
     /**
-   * Menguji apakah use case mampu mengoskestrasikan langkah demi langkah dengan benar.
-   */
+     * Menguji apakah use case mampu mengoskestrasikan langkah demi langkah dengan benar.
+     */
     it("should orchestrating the add user action correctly", async () => {
-    // Arrange
+        // Arrange
+        const userId = uuidv4();
         const useCasePayload = {
             username: "dicoding",
             password: "secret",
@@ -17,7 +19,7 @@ describe("AddUserUseCase", () => {
         };
 
         const mockRegisteredUser = new RegisteredUser({
-            id: "user-123",
+            id: userId,
             username: useCasePayload.username,
             fullname: useCasePayload.fullname,
         });
@@ -42,7 +44,7 @@ describe("AddUserUseCase", () => {
 
         // Assert
         expect(registeredUser).toStrictEqual(new RegisteredUser({
-            id: "user-123",
+            id: userId,
             username: useCasePayload.username,
             fullname: useCasePayload.fullname,
         }));

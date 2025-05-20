@@ -1,4 +1,4 @@
-const { v4: uuidv4, validate: uuidValidate } = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 const CommentLikeRepository = require("../../Domains/likes/CommentLikeRepository");
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 
@@ -8,29 +8,27 @@ class CommentLikeRepositoryPostgres extends CommentLikeRepository {
         this._pool = pool;
     }
 
-    _validateUUIDOrThrow(id) {
-        if (!uuidValidate(id)) {
-            throw new NotFoundError("ID tidak valid");
+    async addLike(like) {
+        const id = uuidv4();
+        const { commentId, owner } = like;
+    
+        const query = {
+            text: "INSERT INTO user_comment_likes (id, comment, owner) VALUES ($1, $2::uuid, $3::uuid)",
+            values: [id, commentId, owner],
+        };
+    
+        try {
+            await this._pool.query(query);
+        } catch (error) {
+            if (error.code === "22P02") {
+                // Error code for invalid UUID format
+                throw new NotFoundError("komentar tidak valid");
+            }
+            throw error;
         }
     }
 
-    async addLike(like) {
-        const id = uuidv4(); // UUID murni tanpa prefix/suffix
-        const { commentId, owner } = like;
-
-        this._validateUUIDOrThrow(commentId);
-
-        const query = {
-            text: "INSERT INTO user_comment_likes (id, comment, owner) VALUES ($1, $2, $3)",
-            values: [id, commentId, owner],
-        };
-
-        await this._pool.query(query);
-    }
-
     async getLikesByThreadId(threadId) {
-        this._validateUUIDOrThrow(threadId);
-
         const query = {
             text: `
                 SELECT user_comment_likes.* 
@@ -48,8 +46,6 @@ class CommentLikeRepositoryPostgres extends CommentLikeRepository {
     async deleteLike(like) {
         const { commentId, owner } = like;
 
-        this._validateUUIDOrThrow(commentId);
-
         const query = {
             text: "DELETE FROM user_comment_likes WHERE comment = $1 AND owner = $2",
             values: [commentId, owner],
@@ -60,8 +56,6 @@ class CommentLikeRepositoryPostgres extends CommentLikeRepository {
 
     async verifyUserCommentLike(like) {
         const { commentId, owner } = like;
-
-        this._validateUUIDOrThrow(commentId);
 
         const query = {
             text: "SELECT 1 FROM user_comment_likes WHERE comment = $1 AND owner = $2",

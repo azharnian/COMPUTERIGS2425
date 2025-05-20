@@ -1,55 +1,49 @@
-const { v4: uuidv4, validate: uuidValidate } = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const AuthorizationError = require("../../Commons/exceptions/AuthorizationError");
 const AddedComment = require("../../Domains/comments/entities/AddedComment");
 const CommentRepository = require("../../Domains/comments/CommentRepository");
 
 class CommentRepositoryPostgres extends CommentRepository {
-    /**
-     * 
-     * @param {Pool} pool - koneksi pool ke database Postgres
-     * @param {Function} idGenerator - fungsi untuk generate ID (default: uuidv4)
-     */
     constructor(pool, idGenerator = uuidv4) {
         super();
         this._pool = pool;
         this._idGenerator = idGenerator;
     }
 
-    _validateUUIDOrThrow(id) {
-        if (!uuidValidate(id)) {
-            throw new NotFoundError("ID tidak valid");
-        }
-    }
-
     async checkCommentAvailability(commentId, threadId) {
-        this._validateUUIDOrThrow(commentId);
-        this._validateUUIDOrThrow(threadId);
-
         const query = {
-            text: "SELECT id, is_delete, thread FROM comments WHERE id = $1",
+            text: "SELECT id, is_delete, thread FROM comments WHERE id = $1::uuid",
             values: [commentId],
         };
-
-        const result = await this._pool.query(query);
-
-        if (!result.rowCount) {
-            throw new NotFoundError("komentar tidak ditemukan");
-        }
-
-        const comment = result.rows[0];
-
-        if (comment.is_delete) {
-            throw new NotFoundError("komentar tidak valid");
-        }
-
-        if (comment.thread !== threadId) {
-            throw new NotFoundError("komentar dalam thread tidak ditemukan");
+    
+        try {
+            const result = await this._pool.query(query);
+    
+            if (!result.rowCount) {
+                throw new NotFoundError("komentar tidak ditemukan");
+            }
+    
+            const comment = result.rows[0];
+    
+            if (comment.is_delete) {
+                throw new NotFoundError("komentar tidak valid");
+            }
+    
+            if (comment.thread !== threadId) {
+                throw new NotFoundError("komentar dalam thread tidak ditemukan");
+            }
+    
+        } catch (error) {
+            if (error.code === "22P02") {
+                throw new NotFoundError("komentar tidak valid");
+            }
+            throw error;
         }
     }
+    
 
     async verifyCommentOwner(id, owner) {
-        this._validateUUIDOrThrow(id);
 
         const query = {
             text: "SELECT owner FROM comments WHERE id = $1",
@@ -68,9 +62,6 @@ class CommentRepositoryPostgres extends CommentRepository {
     async addComment(userId, threadId, newComment) {
         const { content } = newComment;
 
-        this._validateUUIDOrThrow(threadId);
-
-        // Pastikan thread ada
         const threadCheckQuery = {
             text: "SELECT 1 FROM threads WHERE id = $1",
             values: [threadId],
@@ -82,7 +73,7 @@ class CommentRepositoryPostgres extends CommentRepository {
             throw new NotFoundError("Thread tidak ditemukan");
         }
 
-        const id = this._idGenerator(); // pakai idGenerator yang diterima di constructor
+        const id = this._idGenerator();
         const date = new Date().toISOString();
 
         const query = {
@@ -96,9 +87,7 @@ class CommentRepositoryPostgres extends CommentRepository {
     }
 
     async getCommentsByThreadId(threadId) {
-        this._validateUUIDOrThrow(threadId);
-
-        // Validasi keberadaan thread
+        
         const threadCheckQuery = {
             text: "SELECT 1 FROM threads WHERE id = $1",
             values: [threadId],
@@ -126,8 +115,6 @@ class CommentRepositoryPostgres extends CommentRepository {
     }
 
     async deleteCommentById(id) {
-        this._validateUUIDOrThrow(id);
-
         const query = {
             text: "UPDATE comments SET is_delete = true WHERE id = $1",
             values: [id],

@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const AddReplyUseCase = require("../AddReplyUseCase");
 const NewReply = require("../../../Domains/replies/entities/NewReply");
 const AddedReply = require("../../../Domains/replies/entities/AddedReply");
@@ -7,17 +8,22 @@ const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
 
 describe("AddReplyUseCase", () => {
     it("should orchestrating the add reply action correctly", async () => {
-    // Arrange
+        // Arrange
+        const userId = uuidv4();
+        const threadId = uuidv4();
+        const commentId = uuidv4();
+        const replyId = uuidv4();
+
         const useCaseParams = {
-            threadId: "thread-123",
-            commentId: "comment-123",
+            threadId,
+            commentId,
         };
         const useCasePayload = { content: "A reply" };
 
         const mockAddedReply = new AddedReply({
-            id: "reply-123",
+            id: replyId,
             content: useCasePayload.content,
-            owner: "user-123",
+            owner: userId,
         });
 
         /** creating dependency of use case */
@@ -38,23 +44,20 @@ describe("AddReplyUseCase", () => {
         });
 
         // Action
-        const addedReply = await addReplyUseCase.execute("user-123", useCaseParams, useCasePayload);
+        const addedReply = await addReplyUseCase.execute(userId, useCaseParams, useCasePayload);
 
         // Assert
         expect(addedReply).toStrictEqual(new AddedReply({
-            id: "reply-123",
+            id: replyId,
             content: "A reply",
-            owner: "user-123",
+            owner: userId,
         }));
 
-        expect(mockThreadRepository.checkThreadAvailability).toBeCalledWith(useCaseParams.threadId);
-        expect(mockCommentRepository.checkCommentAvailability).toBeCalledWith(
-            useCaseParams.commentId,
-            useCaseParams.threadId,
-        );
+        expect(mockThreadRepository.checkThreadAvailability).toBeCalledWith(threadId);
+        expect(mockCommentRepository.checkCommentAvailability).toBeCalledWith(commentId, threadId);
         expect(mockReplyRepository.addReply).toBeCalledWith(
-            "user-123",
-            useCaseParams.commentId,
+            userId,
+            commentId,
             new NewReply({ content: useCasePayload.content }),
         );
     });

@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const AddCommentUseCase = require("../AddCommentUseCase");
 const NewComment = require("../../../Domains/comments/entities/NewComment");
 const AddedComment = require("../../../Domains/comments/entities/AddedComment");
@@ -6,13 +7,16 @@ const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
 
 describe("AddCommentUseCase", () => {
     it("should orchestrating the add comment action correctly", async () => {
-    // Arrange
+        // Arrange
+        const userId = uuidv4();
+        const threadId = uuidv4();
+        const commentId = uuidv4();
         const useCasePayload = { content: "A comment" };
 
         const mockAddedComment = new AddedComment({
-            id: "comment-123",
+            id: commentId,
             content: "A comment",
-            owner: "user-123",
+            owner: userId,
         });
 
         /** creating dependency of use case */
@@ -30,19 +34,19 @@ describe("AddCommentUseCase", () => {
         });
 
         // Action
-        const addedComment = await addCommentUseCase.execute("user-123", "thread-123", useCasePayload);
+        const addedComment = await addCommentUseCase.execute(userId, threadId, useCasePayload);
 
         // Assert
         expect(addedComment).toStrictEqual(new AddedComment({
-            id: "comment-123",
+            id: commentId,
             content: "A comment",
-            owner: "user-123",
+            owner: userId,
         }));
 
-        expect(mockThreadRepository.checkThreadAvailability).toBeCalledWith("thread-123");
+        expect(mockThreadRepository.checkThreadAvailability).toBeCalledWith(threadId);
         expect(mockCommentRepository.addComment).toBeCalledWith(
-            "user-123",
-            "thread-123",
+            userId,
+            threadId,
             new NewComment({ content: useCasePayload.content }),
         );
     });

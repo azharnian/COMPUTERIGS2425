@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const LikeOrDislikeCommentUseCase = require("../LikeOrDislikeCommentUseCase");
 const CommentLikeRepository = require("../../../Domains/likes/CommentLikeRepository");
 const CommentRepository = require("../../../Domains/comments/CommentRepository");
@@ -6,10 +7,14 @@ const Like = require("../../../Domains/likes/entities/Like");
 
 describe("LikeOrDislikeCommentUseCase", () => {
     it("should orchestrating the like comment action correctly if comment is not liked", async () => {
-    // Arrange
+        // Arrange
+        const commentId = uuidv4();
+        const threadId = uuidv4();
+        const owner = uuidv4();
+
         const like = new Like({
-            commentId: "comment-123",
-            owner: "user-123",
+            commentId,
+            owner,
         });
 
         /** creating dependency of use case */
@@ -32,25 +37,29 @@ describe("LikeOrDislikeCommentUseCase", () => {
 
         // Action
         await likeOrDislikeCommentUseCase.execute(
-            "user-123",
+            owner,
             {
-                threadId: "thread-123",
-                commentId: "comment-123",
+                threadId,
+                commentId,
             },
         );
 
         // Assert
-        expect(mockThreadRepository.checkThreadAvailability).toBeCalledWith("thread-123");
-        expect(mockCommentRepository.checkCommentAvailability).toBeCalledWith("comment-123", "thread-123");
+        expect(mockThreadRepository.checkThreadAvailability).toBeCalledWith(threadId);
+        expect(mockCommentRepository.checkCommentAvailability).toBeCalledWith(commentId, threadId);
         expect(mockCommentLikeRepository.verifyUserCommentLike).toBeCalledWith(like);
         expect(mockCommentLikeRepository.addLike).toBeCalledWith(like);
     });
 
     it("should orchestrating the dislike comment action correctly if comment is liked", async () => {
-    // Arrange
+        // Arrange
+        const commentId = uuidv4();
+        const threadId = uuidv4();
+        const owner = uuidv4();
+
         const like = new Like({
-            commentId: "comment-123",
-            owner: "user-123",
+            commentId,
+            owner,
         });
 
         /** creating dependency of use case */
@@ -73,16 +82,16 @@ describe("LikeOrDislikeCommentUseCase", () => {
 
         // Action
         await likeOrDislikeCommentUseCase.execute(
-            "user-123",
+            owner,
             {
-                threadId: "thread-123",
-                commentId: "comment-123",
+                threadId,
+                commentId,
             },
         );
 
         // Assert
-        expect(mockThreadRepository.checkThreadAvailability).toBeCalledWith("thread-123");
-        expect(mockCommentRepository.checkCommentAvailability).toBeCalledWith("comment-123", "thread-123");
+        expect(mockThreadRepository.checkThreadAvailability).toBeCalledWith(threadId);
+        expect(mockCommentRepository.checkCommentAvailability).toBeCalledWith(commentId, threadId);
         expect(mockCommentLikeRepository.verifyUserCommentLike).toBeCalledWith(like);
         expect(mockCommentLikeRepository.deleteLike).toBeCalledWith(like);
     });

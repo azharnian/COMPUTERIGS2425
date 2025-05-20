@@ -19,12 +19,11 @@ class ReplyDetail {
     _verifyPayload(payload) {
         const { id, username, content, date } = payload;
 
-        if (!id || !username || !content || !date) {
+        if (!username || !content || !date) {
             throw new Error("REPLY_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY");
         }
 
         if (
-            typeof id !== "string" ||
             typeof username !== "string" ||
             typeof content !== "string" ||
             (typeof date !== "string" && typeof date !== "object")
@@ -32,12 +31,10 @@ class ReplyDetail {
             throw new Error("REPLY_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION");
         }
 
-        // Pastikan id yang diberikan adalah UUID v4
         if (id && !uuidValidate(id)) {
             throw new Error("REPLY_DETAIL.ID_NOT_VALID_UUID_V4");
         }
 
-        // Cek apakah id sesuai dengan UUID v4
         if (id && uuidVersion(id) !== 4) {
             throw new Error("REPLY_DETAIL.ID_NOT_VALID_UUID_V4");
         }

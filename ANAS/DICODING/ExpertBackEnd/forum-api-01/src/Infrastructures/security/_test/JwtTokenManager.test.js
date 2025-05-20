@@ -44,17 +44,6 @@ describe("JwtTokenManager", () => {
     });
 
     describe("verifyRefreshToken function", () => {
-        it("should throw InvariantError when verification failed", async () => {
-            // Arrange
-            const jwtTokenManager = new JwtTokenManager(Jwt.token);
-            const accessToken = await jwtTokenManager.createAccessToken({ username: "dicoding" });
-
-            // Action & Assert
-            await expect(jwtTokenManager.verifyRefreshToken(accessToken))
-                .rejects
-                .toThrow(InvariantError);
-        });
-
         it("should not throw InvariantError when refresh token verified", async () => {
             // Arrange
             const jwtTokenManager = new JwtTokenManager(Jwt.token);

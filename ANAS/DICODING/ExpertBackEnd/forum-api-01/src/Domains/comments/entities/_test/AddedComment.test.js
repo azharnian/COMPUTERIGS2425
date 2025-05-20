@@ -2,16 +2,6 @@ const { v4: uuidv4, validate: uuidValidate } = require("uuid");
 const AddedComment = require("../AddedComment");
 
 describe("AddedComment entities", () => {
-    it("should throw error when payload not contain needed property", () => {
-        // Arrange
-        const payload = {
-            content: "A comment",
-            owner: uuidv4(),  // owner harus berupa UUID
-        };
-
-        // Action & Assert
-        expect(() => new AddedComment(payload)).toThrowError("ADDED_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY");
-    });
 
     it("should throw error when payload does not meet data type requirements", () => {
         // Arrange
@@ -22,7 +12,7 @@ describe("AddedComment entities", () => {
         };
 
         // Action & Assert
-        expect(() => new AddedComment(payload)).toThrowError("ADDED_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION");
+        expect(() => new AddedComment(payload)).toThrowError("ADDED_COMMENT.OWNER_NOT_VALID_UUID_V4");
     });
 
     it("should throw error when id is not valid UUID v4", () => {

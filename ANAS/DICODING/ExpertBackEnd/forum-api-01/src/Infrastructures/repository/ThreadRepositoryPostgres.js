@@ -1,4 +1,4 @@
-const { v4: uuidv4, validate: uuidValidate, version: uuidVersion } = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const ThreadRepository = require("../../Domains/threads/ThreadRepository");
 const AddedThread = require("../../Domains/threads/entities/AddedThread");
@@ -9,31 +9,26 @@ class ThreadRepositoryPostgres extends ThreadRepository {
         this._pool = pool;
     }
 
-    _validateThreadId(id) {
-        // Validasi id harus UUID v4 murni
-        if (!uuidValidate(id) || uuidVersion(id) !== 4) {
-            throw new NotFoundError("thread tidak ditemukan");
-        }
-    }
-
     async checkThreadAvailability(id) {
-        this._validateThreadId(id);
-
         const query = {
-            text: "SELECT id FROM threads WHERE id = $1",
+            text: "SELECT id FROM threads WHERE id = $1::uuid",
             values: [id],
         };
 
-        const result = await this._pool.query(query);
+        try {
+            const result = await this._pool.query(query);
 
-        if (!result.rowCount) {
+            if (!result.rowCount) {
+                throw new NotFoundError("thread tidak ditemukan");
+            }
+        } catch (error) {
             throw new NotFoundError("thread tidak ditemukan");
         }
     }
 
     async addThread(userId, newThread) {
         const { title, body } = newThread;
-        const id = uuidv4(); // Generate pure UUID v4 tanpa prefix/suffix
+        const id = uuidv4();
         const date = new Date().toISOString();
 
         const query = {
@@ -47,25 +42,27 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     }
 
     async getThreadById(id) {
-        this._validateThreadId(id);
-
         const query = {
             text: `
                 SELECT threads.id, threads.title, threads.body, threads.date::text, users.username
                 FROM threads
                 LEFT JOIN users ON users.id = threads.owner
-                WHERE threads.id = $1
+                WHERE threads.id = $1::uuid
             `,
             values: [id],
         };
 
-        const result = await this._pool.query(query);
+        try {
+            const result = await this._pool.query(query);
 
-        if (!result.rowCount) {
+            if (!result.rowCount) {
+                throw new NotFoundError("thread tidak ditemukan");
+            }
+
+            return result.rows[0];
+        } catch (error) {
             throw new NotFoundError("thread tidak ditemukan");
         }
-
-        return result.rows[0];
     }
 }
 
